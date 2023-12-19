@@ -3,6 +3,7 @@ import SideNavbar from "@/components/ui/SideNavbar";
 import { getServerSession } from "next-auth";
 import { options } from "../api/auth/[...nextauth]/options";
 import { DataProvider } from "../../hooks/useContextData";
+import services from "@/services/connect";
 
 export default async function RootLayout({
   children,
