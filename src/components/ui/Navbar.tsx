@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import GetCurrentPath from "./getCurrentPath";
 import { useTodo } from "@/hooks/useContextData";
 import { useEffect, useState } from "react";
+import { useTodo } from "@/hooks/useContextData";
 
 type user = {
   password: string;
@@ -38,6 +39,7 @@ export default function Navbar({ session }: Props) {
   // const session: any = await getServerSession(options);
 
 
+  const { users } = useTodo();
   const [currentUser, setCurrentUser] = useState<user>(initialUser);
   console.log(users);
 
