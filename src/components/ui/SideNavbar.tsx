@@ -75,11 +75,15 @@ export default function SideNavbar({ Admin, session }: Props) {
   const [currentUser, setCurrentUser] = useState<user>();
 
   useEffect(() => {
+    if(users){
     const cuser = users.find((u: user) => u.email == session.user.email);
     console.log(cuser);
     setCurrentUser(cuser);
+  }
   }, [session, users]);
   console.log(currentUser);
+
+  if(!currentUser) return null
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
