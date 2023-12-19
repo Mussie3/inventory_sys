@@ -25,7 +25,7 @@ export default async function RootLayout({
       <SideNavbar Admin={session?.user.role === "admin"} session={session} />
       <div className="min-h-screen w-full">
         <div className="sticky top-0 z-50">
-          <Navbar session={session} />
+          <Navbar />
         </div>
         <DataProvider>
           <div className="w-full z-40">{children}</div>

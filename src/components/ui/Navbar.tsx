@@ -6,12 +6,8 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import GetCurrentPath from "./getCurrentPath";
 
-type Props = {
-  session: any;
-};
-
-export default async function Navbar({ session}: Props) {
-  // const session: any = await getServerSession(options);
+export default async function Navbar() {
+  const session: any = await getServerSession(options);
   // const session = {
   //   user: {
   //     name: "jane doe",
@@ -32,7 +28,7 @@ export default async function Navbar({ session}: Props) {
         <div className="">
           <ModeToggle />
         </div>
-        {/* <Link href={`/profile/${session?.user.name}`}> */}
+        <Link href={`/profile/${session?.user.name}`}>
           <Avatar>
             <AvatarImage
               src={session?.user.image as string}
@@ -42,7 +38,7 @@ export default async function Navbar({ session}: Props) {
               {session?.user.name.slice(0, 2).toLocaleUpperCase()}
             </AvatarFallback>
           </Avatar>
-        {/* </Link> */}
+        </Link>
         <Signout />
       </div>
     </div>
