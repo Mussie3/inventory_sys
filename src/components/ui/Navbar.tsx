@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import GetCurrentPath from "./getCurrentPath";
 import { useTodo } from "@/hooks/useContextData";
 import { useEffect, useState } from "react";
-import { useTodo } from "@/hooks/useContextData";
 
 type user = {
   password: string;
