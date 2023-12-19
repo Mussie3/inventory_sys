@@ -63,7 +63,15 @@ export default function SideNavbar({ Admin, session}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
-  alert(session)
+  const { users } = useTodo();
+  const [currentUser, setCurrentUser] = useState<user | undefined>();
+
+  useEffect(() => {
+    const cuser = users.find((u: user) => u.email == session.user.email);
+    console.log(cuser);
+    setCurrentUser(cuser);
+  }, [session, users]);
+  console.log(currentUser);
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
@@ -116,13 +124,13 @@ export default function SideNavbar({ Admin, session}: Props) {
       <div className="flex items-center gap-2 border-t p-3">
         {/* <Link href={`/users/editUsers/${currentUser?.docId}`}> */}
         <div className="w-12 h-12 rounded-full">
-            <Avatar>
+        <Avatar>
               <AvatarImage
-                src={session?.user.image as string}
-                alt={session?.user.name}
+                src={currentUser?.image as string}
+                alt={currentUser?.username}
               />
               <AvatarFallback>
-                {session?.user.name.slice(0, 2).toLocaleUpperCase()}
+                {currentUser?.username.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -134,9 +142,9 @@ export default function SideNavbar({ Admin, session}: Props) {
         >
           <div className="leading-4">
             <h4 className="font-semibold">
-              {session?.user.name.toLocaleUpperCase()}
+            {currentUser?.username.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{session?.user.email}</span>
+            <span className="text-xs text-gray-400">{currentUser?.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />
