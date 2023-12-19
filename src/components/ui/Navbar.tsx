@@ -32,10 +32,10 @@ export default function Navbar({ session ,users}: Props) {
   const [currentUser, setCurrentUser] = useState<user | undefined>();
 
   useEffect(() => {
-    
+    if(users){
       const cuser = users.find((u: user) => u.email == session.user.email);
     setCurrentUser(cuser);
-
+    }
   }, [session, users]);
 
   if(!currentUser) return null
