@@ -23,7 +23,6 @@ export default function Navbar({ session }: Props) {
   // const session: any = await getServerSession(options);
 
 
-
   return (
     <div className="flex items-center justify-between px-8 min-h-[8vh] border-b shadow-sm bg-white dark:bg-black z-100">
       <div className="">
