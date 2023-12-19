@@ -72,13 +72,13 @@ export default function SideNavbar({ Admin, session ,users}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
-  const [currentUser, setCurrentUser] = useState<user>();
+  const [currentUser, setCurrentUser] = useState<user | undefined>();
 
   useEffect(() => {
-    if(users){
+    
     const cuser = users.find((u: user) => u.email == session.user.email);
     setCurrentUser(cuser);
-  }
+  
   }, [session, users]);
   
 
