@@ -21,17 +21,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(options);
-  const Users = await services.GetAllUsers() as user [];
-
-  if(!Users || Users?.length==0) return null
 
   return (
     <div className="flex w-full">
       <DataProvider>
-        <SideNavbar Admin={session?.user.role === "admin"} session={session} users={Users} />
+        <SideNavbar Admin={session?.user.role === "admin"} session={session} />
         <div className="min-h-screen w-full">
           <div className="sticky top-0 z-50">
-            <Navbar session={session} users={Users}/>
+            <Navbar session={session}/>
           </div>
 
           <div className="w-full z-40">{children}</div>
