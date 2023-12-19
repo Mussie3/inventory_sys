@@ -5,13 +5,23 @@ import { options } from "../api/auth/[...nextauth]/options";
 import { DataProvider } from "../../hooks/useContextData";
 import services from "@/services/connect";
 
+type user = {
+  password: string;
+  email: string;
+  image: string;
+  datetime: string;
+  username: string;
+  docId: string;
+  role: string;
+};
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const session = await getServerSession(options);
-  const Users = await services.GetAllUsers();
+  const Users = await services.GetAllUsers() as user [];
 
   if(!Users || Users.length>0) return null
 
