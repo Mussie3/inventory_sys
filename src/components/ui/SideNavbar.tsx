@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Button } from "./button";
 import { FiMoreVertical, FiUsers } from "react-icons/fi";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import Image from "next/image";
 
 const NavMenu = [
   {
