@@ -11,7 +11,7 @@ import Link from "next/link";
 import { Button } from "./button";
 import { FiMoreVertical, FiUsers } from "react-icons/fi";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { useTodo } from "@/hooks/useContextData";
+// import { useTodo } from "@/hooks/useContextData";
 import Image from "next/image";
 
 const NavMenu = [
@@ -55,6 +55,7 @@ const NavMenu = [
 type Props = {
   Admin: boolean;
   session: any;
+  users: user[];
 };
 
 type user = {
@@ -67,21 +68,19 @@ type user = {
   role: string;
 };
 
-export default function SideNavbar({ Admin, session }: Props) {
+export default function SideNavbar({ Admin, session ,users}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
-  const { users } = useTodo();
   const [currentUser, setCurrentUser] = useState<user>();
 
   useEffect(() => {
     if(users){
     const cuser = users.find((u: user) => u.email == session.user.email);
-    console.log(cuser);
     setCurrentUser(cuser);
   }
   }, [session, users]);
-  console.log(currentUser);
+  
 
   if(!currentUser) return null
 

@@ -21,25 +21,22 @@ type user = {
 
 type Props = {
   session: any;
+  users:user[];
 };
 
 
-export default function Navbar({ session }: Props) {
+export default function Navbar({ session ,users}: Props) {
   // const session: any = await getServerSession(options);
 
-  console.log(session);
-  const { users } = useTodo();
+
   const [currentUser, setCurrentUser] = useState<user>();
-  console.log(users);
 
   useEffect(() => {
     if(users){
       const cuser = users.find((u: user) => u.email == session.user.email);
-    console.log(cuser);
     setCurrentUser(cuser);
     }
   }, [session, users]);
-  console.log(currentUser);
 
   if(!currentUser) return null
 
