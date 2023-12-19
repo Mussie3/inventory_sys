@@ -57,41 +57,14 @@ type Props = {
   session: any;
 };
 
-type user = {
-  password: string;
-  email: string;
-  image: string;
-  datetime: string;
-  username: string;
-  docId: string;
-  role: string;
-};
 
-const initialUser = {
-  password: '',
-  email: '',
-  image: '',
-  datetime: '',
-  username: '',
-  docId: '',
-  role: '',
-}
 
 export default function SideNavbar({ Admin, session}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
-  const { users } = useTodo();
-  const [currentUser, setCurrentUser] = useState<user>(initialUser);
 
-  useEffect(() => {
-    if (users) {
-      const cuser = users.find((u: user) => u.email == session.user.email);
-      console.log(cuser);
-      setCurrentUser(cuser);
-    }
-  }, [session, users]);
-  console.log(currentUser);
+
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
@@ -142,19 +115,19 @@ export default function SideNavbar({ Admin, session}: Props) {
         })}
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
-        <Link href={`/users/editUsers/${currentUser?.docId}`}>
+        {/* <Link href={`/users/editUsers/${currentUser?.docId}`}> */}
           <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={currentUser?.image as string}
-                alt={currentUser?.username}
+                src={session?.user?.image as string}
+                alt={session?.user?.name}
               />
               <AvatarFallback>
-                {currentUser?.username.slice(0, 2).toLocaleUpperCase()}
+                {session?.user?.name.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
-        </Link>
+        {/* </Link> */}
         <div
           className={`overflow-hidden flex justify-between items-center transition-all ${
             expanded ? "w-52 ml-3" : "w-0"
@@ -164,7 +137,7 @@ export default function SideNavbar({ Admin, session}: Props) {
             <h4 className="font-semibold">
               {session?.user.name.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{currentUser?.email}</span>
+            <span className="text-xs text-gray-400">{session?.user?.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />

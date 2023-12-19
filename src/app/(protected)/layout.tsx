@@ -30,7 +30,6 @@ export default async function RootLayout({
           <div className="sticky top-0 z-50">
             <Navbar session={session}/>
           </div>
-
           <div className="w-full z-40">{children}</div>
         </div>
       </DataProvider>
