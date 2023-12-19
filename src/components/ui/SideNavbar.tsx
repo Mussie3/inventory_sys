@@ -76,7 +76,7 @@ export default function SideNavbar({ Admin, session }: Props) {
 
   useEffect(() => {
     if (users && users.length != 0) {
-      const cuser = users.find((u: user) => u.email == session.user.email);
+      const cuser = users.find((u: user) => u.email == session.user.email) as user;
       console.log(cuser);
       setCurrentUser(cuser);
     }
