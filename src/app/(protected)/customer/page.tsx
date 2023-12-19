@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RiArrowUpDownFill } from "react-icons/Ri";
+import { RiArrowUpDownFill } from "react-icons/ri";
 import {
   DropdownMenu,
   DropdownMenuContent,
