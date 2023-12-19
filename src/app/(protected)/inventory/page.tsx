@@ -8,7 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { RiArrowUpDownFill } from "react-icons/Ri";
+import { RiArrowUpDownFill } from "react-icons/ri";
 import {
   DropdownMenu,
   DropdownMenuContent,

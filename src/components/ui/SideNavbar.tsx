@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { LiaProductHunt, LiaUserSolid } from "react-icons/lia";
-import { MdOutlineInventory2 } from "react-icons/Md";
+import { MdOutlineInventory2 } from "react-icons/md";
 import { BsChevronBarLeft, BsChevronBarRight } from "react-icons/bs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
