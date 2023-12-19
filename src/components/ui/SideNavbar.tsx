@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { LiaProductHunt, LiaUserSolid } from "react-icons/lia";
-import { MdOutlineInventory2 } from "react-icons/md";
+import { MdOutlineInventory2 } from "react-icons/Md";
 import { BsChevronBarLeft, BsChevronBarRight } from "react-icons/bs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -57,9 +57,33 @@ type Props = {
   session: any;
 };
 
+type user = {
+  password: string;
+  email: string;
+  image: string;
+  datetime: string;
+  username: string;
+  docId: string;
+  role: string;
+};
+
 export default function SideNavbar({ Admin, session }: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
+
+  const { users } = useTodo();
+  const [currentUser, setCurrentUser] = useState<user | undefined>();
+
+  useEffect(() => {
+    if (users && users.length != 0) {
+      const cuser = users.find((u: user) => u.email == session.user.email);
+      console.log(cuser);
+      setCurrentUser(cuser);
+    }
+  }, [session, users]);
+  console.log(currentUser);
+
+  if (!currentUser) return null;
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
@@ -70,11 +94,11 @@ export default function SideNavbar({ Admin, session }: Props) {
               expanded ? "w-fit" : "w-0"
             }`}
           >
-            <Image 
-            src="https://firebasestorage.googleapis.com/v0/b/inventory-system-c1ed7.appspot.com/o/logo%2Frungo-logo.png?alt=media&token=2b004317-2da4-414c-85d0-6a44134c9d7e"
-            alt="logo"
-            width={200}
-            height={30}
+            <Image
+              src="https://firebasestorage.googleapis.com/v0/b/inventory-system-c1ed7.appspot.com/o/logo%2Frungo-logo.png?alt=media&token=2b004317-2da4-414c-85d0-6a44134c9d7e"
+              alt="logo"
+              width={200}
+              height={30}
             />
           </div>
         </Link>
@@ -110,19 +134,19 @@ export default function SideNavbar({ Admin, session }: Props) {
         })}
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
-        {/* <Link href={`/profile/${session?.user.name}`}> */}
+        <Link href={`/users/editUsers/${currentUser?.docId}`}>
           <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={session?.user.image as string}
-                alt={session?.user.name}
+                src={currentUser?.image as string}
+                alt={currentUser?.username}
               />
               <AvatarFallback>
-                {session?.user.name.slice(0, 2).toLocaleUpperCase()}
+                {currentUser?.username.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
-        {/* </Link> */}
+        </Link>
         <div
           className={`overflow-hidden flex justify-between items-center transition-all ${
             expanded ? "w-52 ml-3" : "w-0"
@@ -132,7 +156,7 @@ export default function SideNavbar({ Admin, session }: Props) {
             <h4 className="font-semibold">
               {session?.user.name.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{session?.user.email}</span>
+            <span className="text-xs text-gray-400">{currentUser?.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />
