@@ -1,16 +1,18 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { LiaProductHunt, LiaUserSolid } from "react-icons/lia";
-import { MdOutlineInventory2 } from "react-icons/Md";
+import { MdOutlineInventory2 } from "react-icons/md";
 import { BsChevronBarLeft, BsChevronBarRight } from "react-icons/bs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "./button";
 import { FiMoreVertical, FiUsers } from "react-icons/fi";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { useTodo } from "@/hooks/useContextData";
+import Image from "next/image";
 
 const NavMenu = [
   {
@@ -55,15 +57,39 @@ type Props = {
   session: any;
 };
 
+type user = {
+  password: string;
+  email: string;
+  image: string;
+  datetime: string;
+  username: string;
+  docId: string;
+  role: string;
+};
+
 export default function SideNavbar({ Admin, session }: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
+
+  const { users } = useTodo();
+  const [currentUser, setCurrentUser] = useState<user | undefined>();
+
+  useEffect(() => {
+    if (users && users.length != 0) {
+      const cuser = users.find((u: user) => u.email == session.user.email) as user;
+      console.log(cuser);
+      setCurrentUser(cuser);
+    }
+  }, [session, users]);
+  console.log(currentUser);
+
+  if (!currentUser) return null;
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
       <div className="flex items-center justify-between mb-32 p-4">
         <Link href={"/"}>
-        <div
+          <div
             className={`overflow-hidden text-2xl transition-all ${
               expanded ? "w-fit" : "w-0"
             }`}
@@ -108,15 +134,15 @@ export default function SideNavbar({ Admin, session }: Props) {
         })}
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
-        <Link href={`/profile/${session?.user.name}`}>
+        <Link href={`/users/editUsers/${currentUser?.docId}`}>
           <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={session?.user.image as string}
-                alt={session?.user.name}
+                src={currentUser?.image as string}
+                alt={currentUser?.username}
               />
               <AvatarFallback>
-                {session?.user.name.slice(0, 2).toLocaleUpperCase()}
+                {currentUser?.username.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -130,7 +156,7 @@ export default function SideNavbar({ Admin, session }: Props) {
             <h4 className="font-semibold">
               {session?.user.name.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{session?.user.email}</span>
+            <span className="text-xs text-gray-400">{currentUser?.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />

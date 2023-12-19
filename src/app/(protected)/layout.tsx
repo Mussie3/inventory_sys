@@ -22,15 +22,16 @@ export default async function RootLayout({
 
   return (
     <div className="flex w-full">
-      <SideNavbar Admin={session?.user.role === "admin"} session={session} />
-      <div className="min-h-screen w-full">
-        <div className="sticky top-0 z-50">
-          <Navbar />
-        </div>
-        <DataProvider>
+      <DataProvider>
+        <SideNavbar Admin={session?.user.role === "admin"} session={session} />
+        <div className="min-h-screen w-full">
+          <div className="sticky top-0 z-50">
+            <Navbar session={session} />
+          </div>
+
           <div className="w-full z-40">{children}</div>
-        </DataProvider>
-      </div>
+        </div>
+      </DataProvider>
     </div>
   );
 }
