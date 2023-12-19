@@ -64,8 +64,6 @@ export default function SideNavbar({ Admin, session}: Props) {
   const path = usePathname();
 
 
-console.log('session')
-
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
       <div className="flex items-center justify-between mb-32 p-4">
@@ -116,14 +114,14 @@ console.log('session')
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
         {/* <Link href={`/users/editUsers/${currentUser?.docId}`}> */}
-          <div className="w-12 h-12 rounded-full">
+        <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={session?.user?.image as string}
-                alt={session?.user?.name}
+                src={session?.user.image as string}
+                alt={session?.user.name}
               />
               <AvatarFallback>
-                {session?.user?.name.slice(0, 2).toLocaleUpperCase()}
+                {session?.user.name.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -137,7 +135,7 @@ console.log('session')
             <h4 className="font-semibold">
               {session?.user.name.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{session?.user?.email}</span>
+            <span className="text-xs text-gray-400">{session?.user.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />
