@@ -5,7 +5,7 @@ import { Button } from "./button";
 import { FiEdit } from "react-icons/fi";
 import UploadImageToStorage from "./UploadImg";
 import Image from "next/image";
-import { BiSolidHide, BiSolidShow } from "react-icons/Bi";
+import { BiSolidHide, BiSolidShow } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import { useTodo } from "@/hooks/useContextData";
 import { toast } from "sonner";

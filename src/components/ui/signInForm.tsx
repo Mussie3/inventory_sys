@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signIn } from "next-auth/react";
-import { BiSolidShow } from "react-icons/Bi";
-import { BiSolidHide } from "react-icons/Bi";
+import { BiSolidShow } from "react-icons/bi";
+import { BiSolidHide } from "react-icons/bi";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";

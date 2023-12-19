@@ -15,8 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { BiSolidShow } from "react-icons/Bi";
-import { BiSolidHide } from "react-icons/Bi";
+import { BiSolidShow } from "react-icons/bi";
+import { BiSolidHide } from "react-icons/bi";
 import {
   Select,
   SelectContent,
