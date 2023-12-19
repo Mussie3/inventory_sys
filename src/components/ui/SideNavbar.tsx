@@ -77,10 +77,11 @@ const initialUser = {
   role: '',
 }
 
-export default function SideNavbar({ Admin, session ,users}: Props) {
+export default function SideNavbar({ Admin, session}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
+  const { users } = useTodo();
   const [currentUser, setCurrentUser] = useState<user>(initialUser);
 
   useEffect(() => {
