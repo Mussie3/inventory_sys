@@ -13,7 +13,7 @@ export default async function RootLayout({
   const session = await getServerSession(options);
   const Users = await services.GetAllUsers();
 
-  if(!Users) return null
+  if(!Users || Users.length>0) return null
 
   return (
     <div className="flex w-full">
