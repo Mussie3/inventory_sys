@@ -55,7 +55,6 @@ const NavMenu = [
 type Props = {
   Admin: boolean;
   session: any;
-  users: user[];
 };
 
 type user = {
@@ -68,21 +67,30 @@ type user = {
   role: string;
 };
 
+const initialUser = {
+  password: '',
+  email: '',
+  image: '',
+  datetime: '',
+  username: '',
+  docId: '',
+  role: '',
+}
+
 export default function SideNavbar({ Admin, session ,users}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
-  const [currentUser, setCurrentUser] = useState<user | undefined>();
+  const [currentUser, setCurrentUser] = useState<user>(initialUser);
 
   useEffect(() => {
-    if(users){
-    const cuser = users.find((u: user) => u.email == session.user.email);
-    setCurrentUser(cuser);
+    if (users) {
+      const cuser = users.find((u: user) => u.email == session.user.email);
+      console.log(cuser);
+      setCurrentUser(cuser);
     }
   }, [session, users]);
-  
-
-  if(!currentUser) return null
+  console.log(currentUser);
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
