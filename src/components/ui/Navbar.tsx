@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Signout from "./Signout";
 import { ModeToggle } from "./toggle-mode";
@@ -20,7 +21,7 @@ type Props = {
   session: any;
 };
 
-export default async function Navbar({ session }: Props) {
+export default function Navbar({ session }: Props) {
 
   const { users } = useTodo();
   const [currentUser, setCurrentUser] = useState<user | undefined>();
