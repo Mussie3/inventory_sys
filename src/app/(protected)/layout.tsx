@@ -19,7 +19,6 @@ export default async function RootLayout({
   //     role: "admin",
   //   },
   // };
-  console.log("session",session);
 
   return (
     <div className="flex w-full">

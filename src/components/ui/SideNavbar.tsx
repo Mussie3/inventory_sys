@@ -63,6 +63,7 @@ export default function SideNavbar({ Admin, session}: Props) {
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
 
+  console.log("session",session);
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
