@@ -34,7 +34,7 @@ const initialUser = {
 }
 
 
-export default function Navbar({ session ,users}: Props) {
+export default function Navbar({ session }: Props) {
   // const session: any = await getServerSession(options);
 
 
