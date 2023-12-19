@@ -27,11 +27,15 @@ export default async function Navbar({ session }: Props) {
   console.log(users);
 
   useEffect(() => {
-    const cuser = users.find((u: user) => u.email == session.user.email);
+    if(users && users.length!=0){
+    const cuser = users.find((u: user) => u.email == session.user.email) as user;
     console.log(cuser);
     setCurrentUser(cuser);
+    }
   }, [session, users]);
   console.log(currentUser);
+
+  if(!currentUser) return null
 
   return (
     <div className="flex items-center justify-between px-8 min-h-[8vh] border-b shadow-sm bg-white dark:bg-black z-100">
