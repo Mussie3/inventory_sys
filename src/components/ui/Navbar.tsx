@@ -21,24 +21,34 @@ type user = {
 
 type Props = {
   session: any;
-  users:user[];
 };
+
+const initialUser = {
+  password: '',
+  email: '',
+  image: '',
+  datetime: '',
+  username: '',
+  docId: '',
+  role: '',
+}
 
 
 export default function Navbar({ session ,users}: Props) {
   // const session: any = await getServerSession(options);
 
 
-  const [currentUser, setCurrentUser] = useState<user | undefined>();
+  const [currentUser, setCurrentUser] = useState<user>(initialUser);
+  console.log(users);
 
   useEffect(() => {
-    if(users){
+    if (users) {
       const cuser = users.find((u: user) => u.email == session.user.email);
-    setCurrentUser(cuser);
+      console.log(cuser);
+      setCurrentUser(cuser);
     }
   }, [session, users]);
-
-  if(!currentUser) return null
+  console.log(currentUser);
 
   return (
     <div className="flex items-center justify-between px-8 min-h-[8vh] border-b shadow-sm bg-white dark:bg-black z-100">
