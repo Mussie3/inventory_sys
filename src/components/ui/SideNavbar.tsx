@@ -64,7 +64,7 @@ export default function SideNavbar({ Admin, session }: Props) {
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
       <div className="flex items-center justify-between mb-32 p-4">
         <Link href={"/"}>
-        <div
+          <div
             className={`overflow-hidden text-2xl transition-all ${
               expanded ? "w-fit" : "w-0"
             }`}
@@ -109,11 +109,11 @@ export default function SideNavbar({ Admin, session }: Props) {
         })}
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
-        <Link href={`/profile/${session?.user.name}`}>
+        <Link href={`users/editUsers/${session?.user.sub}`}>
           <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={session?.user.image as string}
+                src={session?.user.picture as string}
                 alt={session?.user.name}
               />
               <AvatarFallback>

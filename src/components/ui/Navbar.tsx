@@ -8,15 +8,6 @@ import GetCurrentPath from "./getCurrentPath";
 
 export default async function Navbar() {
   const session: any = await getServerSession(options);
-  // const session = {
-  //   user: {
-  //     name: "jane doe",
-  //     email: "hhh@ggg.com",
-  //     image:
-  //       "https://firebasestorage.googleapis.com/v0/b/inventory-app-b78f3.appspot.com/o/image%2Floading_image.png?alt=media&token=79b09057-34ff-4533-b2bf-f7b101e1ecd8",
-  //     role: "admin",
-  //   },
-  // };
   console.log(session);
 
   return (
@@ -28,10 +19,10 @@ export default async function Navbar() {
         <div className="">
           <ModeToggle />
         </div>
-        <Link href={`/profile/${session?.user.name}`}>
+        <Link href={`users/editUsers/${session?.user.sub}}`}>
           <Avatar>
             <AvatarImage
-              src={session?.user.image as string}
+              src={session?.user.picture as string}
               alt={session?.user.name}
             />
             <AvatarFallback>

@@ -10,19 +10,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(options);
-  // const session = {
-  //   user: {
-  //     name: "jane doe",
-  //     email: "hhh@ggg.com",
-  //     image:
-  //       "https://firebasestorage.googleapis.com/v0/b/inventory-app-b78f3.appspot.com/o/image%2Floading_image.png?alt=media&token=79b09057-34ff-4533-b2bf-f7b101e1ecd8",
-  //     role: "admin",
-  //   },
-  // };
+  console.log(session);
 
   return (
     <div className="flex w-full">
-      <SideNavbar Admin={session?.user.role === "admin"} session={session} />
+      <SideNavbar Admin={session?.user?.role === "admin"} session={session} />
       <div className="min-h-screen w-full">
         <div className="sticky top-0 z-50">
           <Navbar />
