@@ -31,3 +31,4 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export { db, storage };
+export const fetchCache = { cacheControl: "no-store" };

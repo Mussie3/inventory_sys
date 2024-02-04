@@ -14,7 +14,7 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
-import { db, storage } from "../firebase.config";
+import { db, fetchCache, storage } from "../firebase.config";
 
 //   import toast from "react-hot-toast";
 
@@ -302,7 +302,7 @@ const services = {
   GetAllUsers: async () => {
     const usersref = collection(db, "Users");
     try {
-      const data = await getDocs(usersref);
+      const data = await getDocs(usersref, fetchCache);
       const allusers = data.docs.map((doc) => doc.data());
       console.log(allusers);
       return allusers;
@@ -314,7 +314,7 @@ const services = {
     console.log("g");
     const catagorysref = collection(db, "Catagorys");
     try {
-      const data = await getDocs(catagorysref);
+      const data = await getDocs(catagorysref, fetchCache);
       console.log("g");
       const allcatagorys = data.docs.map((doc) => doc.data());
       return allcatagorys;
@@ -326,7 +326,7 @@ const services = {
   GetAllCustomers: async () => {
     const customersref = collection(db, "Customers");
     try {
-      const data = await getDocs(customersref);
+      const data = await getDocs(customersref, fetchCache);
       const allcustomers = data.docs.map((doc) => doc.data());
       return allcustomers;
     } catch (err) {
@@ -336,7 +336,7 @@ const services = {
   GetAllProducts: async () => {
     const productssref = collection(db, "Products");
     try {
-      const data = await getDocs(productssref);
+      const data = await getDocs(productssref, fetchCache);
       const allproducts = data.docs.map((doc) => doc.data());
       return allproducts;
     } catch (err) {
@@ -346,7 +346,7 @@ const services = {
   GetAllInventorys: async () => {
     const inventorysref = collection(db, "Inventory");
     try {
-      const data = await getDocs(inventorysref);
+      const data = await getDocs(inventorysref, fetchCache);
       const allinventorys = data.docs.map((doc) => doc.data());
       return allinventorys;
     } catch (err) {
@@ -356,7 +356,7 @@ const services = {
   GetAllSeles: async () => {
     const salesref = collection(db, "Sales");
     try {
-      const data = await getDocs(salesref);
+      const data = await getDocs(salesref, fetchCache);
       const allsales = data.docs.map((doc) => doc.data());
       return allsales;
     } catch (err) {
@@ -478,7 +478,7 @@ const services = {
     const productsref = doc(db, "Products", id);
 
     try {
-      const product = await getDoc(productsref);
+      const product = await getDoc(productsref, fetchCache);
 
       return product.data();
     } catch (err) {
@@ -489,7 +489,7 @@ const services = {
     const customersref = doc(db, "Customers", id);
 
     try {
-      const product = await getDoc(customersref);
+      const product = await getDoc(customersref, fetchCache);
 
       return product.data();
     } catch (err) {
@@ -500,7 +500,7 @@ const services = {
     const invenntoryref = doc(db, "Inventory", id);
 
     try {
-      const inventory = await getDoc(invenntoryref);
+      const inventory = await getDoc(invenntoryref, fetchCache);
 
       return inventory.data();
     } catch (err) {
@@ -511,7 +511,7 @@ const services = {
     const userref = doc(db, "Users", id);
 
     try {
-      const user = await getDoc(userref);
+      const user = await getDoc(userref, fetchCache);
 
       return user.data();
     } catch (err) {
@@ -522,7 +522,7 @@ const services = {
     const salesref = doc(db, "Sales", id);
 
     try {
-      const sales = await getDoc(salesref);
+      const sales = await getDoc(salesref, fetchCache);
 
       return sales.data();
     } catch (err) {
@@ -583,30 +583,6 @@ const services = {
       return "something went wrong";
     }
   },
-
-  // EditAllSales2: async () => {
-  //   const productssref = collection(db, "Products");
-  //   try {
-  //     const data = await getDocs(productssref);
-  //     const allproducts = data.docs.map((doc) => doc.data());
-
-  //     for (let i = 0; i < allproducts.length; i++) {
-  //       const created = doc(db, "Products", allproducts[i].docId);
-
-  //       await setDoc(
-  //         created,
-  //         {
-  //           unit_price: Number(allproducts[i].unit_price),
-  //         },
-  //         { merge: true }
-  //       );
-  //     }
-  //     return true;
-  //   } catch (err) {
-  //     console.log(err);
-  //     return undefined;
-  //   }
-  // },
 };
 
 export default services;

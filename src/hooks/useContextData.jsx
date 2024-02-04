@@ -29,7 +29,9 @@ export function DataProvider({ children }) {
     setInventoryLoading(true);
     setSalesLoading(true);
     setUsersLoading(true);
-    fetch("/api/getAllPagesData")
+    fetch("/api/getAllPagesData", {
+      cache: "no-store",
+    })
       .then((response) => response.json())
       .then((alldata) => {
         console.log(alldata);
