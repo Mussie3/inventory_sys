@@ -12,15 +12,11 @@ export const POST = async (request) => {
     docId,
     changePassword,
   } = await request.json();
-  // const updated = await request.json();
-  // console.log(updated);
 
   try {
     let updatedUser;
 
     const User = await services.GetUserById(docId);
-
-    console.log(User);
 
     let passwordMatch = true;
 
@@ -46,19 +42,14 @@ export const POST = async (request) => {
         };
       }
     }
-    console.log(passwordMatch);
-    console.log(updatedUser);
 
     let updated = false;
 
     if (updatedUser && passwordMatch) {
-      console.log("updatedUser");
       updated = await services.EditUserById(docId, updatedUser);
     }
 
     //
-
-    // console.log(newUserId);
 
     return new Response(
       JSON.stringify({ updated: updated, passwordMatch: passwordMatch }),

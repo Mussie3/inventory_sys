@@ -4,11 +4,7 @@ export const POST = async (request) => {
   const { min, max } = await request.json();
 
   try {
-    console.log(min, max);
-
     const salesData = await services.GetAllSeles();
-
-    console.log(salesData);
 
     const filteredSales = salesData.filter((sale) => {
       const date = sale.datetime;
@@ -23,8 +19,6 @@ export const POST = async (request) => {
         );
       } else return true;
     });
-
-    console.log(filteredSales);
 
     let No = 0;
     let Price = 0;

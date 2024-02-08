@@ -46,8 +46,6 @@ export default function EditInventoryForm({
   const [sending, setSending] = useState(false);
   const router = useRouter();
 
-  console.log(history);
-
   function fetchInventorydata(postdata: any) {
     // setInventoryLoading(true);
     // fetch("/api/getInventory")
@@ -93,7 +91,6 @@ export default function EditInventoryForm({
       history,
       inventoryId: inventoryId,
     };
-    console.log(postdata);
     const res = await fetch("/api/editInventory", {
       method: "POST",
       body: JSON.stringify(postdata),
@@ -101,7 +98,6 @@ export default function EditInventoryForm({
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchInventorydata(postdata);
       router.push(`/inventory/`);
       return response.result;
@@ -110,8 +106,6 @@ export default function EditInventoryForm({
   }
 
   async function onSubmit() {
-    console.log(history);
-
     setSending(true);
     toast.promise(EditInventory(), {
       loading: "sending data ...",

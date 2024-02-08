@@ -1,7 +1,6 @@
 import services from "@/services/connect";
 
-export const GET = async (request) => {
-  console.log("getting all data");
+export const POST = async (request) => {
   try {
     const promises = [
       services.GetAllProducts(),
@@ -15,8 +14,6 @@ export const GET = async (request) => {
 
     const AllResults = await Promise.allSettled(promises);
 
-    console.log(AllResults);
-
     return new Response(
       JSON.stringify({
         AllResults: AllResults,
@@ -26,7 +23,6 @@ export const GET = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to get All the data", { status: 500 });
   }
 };

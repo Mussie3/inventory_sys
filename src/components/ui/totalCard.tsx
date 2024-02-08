@@ -35,7 +35,6 @@ export default function TotalCard({ timeLabel }: Props) {
     const now = new Date();
     now.setDate(now.getDate() + 1);
     const nowPlusone = now.toISOString().slice(0, 10);
-    console.log(nowPlusone, now);
     const Data =
       timeLabel == "This Week"
         ? {
@@ -52,7 +51,6 @@ export default function TotalCard({ timeLabel }: Props) {
     })
       .then((response) => response.json())
       .then((datas) => {
-        console.log(datas);
         setData(datas);
       });
   }, [timeLabel]);

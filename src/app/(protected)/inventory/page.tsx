@@ -101,7 +101,6 @@ export default function Inventory() {
   });
 
   async function deleteInventory(id: string, productId: string) {
-    console.log(id);
     const res = await fetch("/api/deleteInventory", {
       method: "POST",
       body: JSON.stringify({ id, productId }),
@@ -109,7 +108,7 @@ export default function Inventory() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.success);
+
       if (response.success) fetchInventorydata(id);
       return response.success;
     }
@@ -182,8 +181,7 @@ export default function Inventory() {
         if (filterStatuses.length === 0) return true;
         const catagory: any = row.getValue(columnId);
         // value => two date input values
-        console.log(filterStatuses);
-        console.log(catagory);
+
         //If one filter defined and date is null filter it
         if (filterStatuses.includes(catagory)) return true;
         else return false;
@@ -231,7 +229,7 @@ export default function Inventory() {
       filterFn: (row, columnId, filterStatuses) => {
         const date: any = row.getValue(columnId);
         const [start, end] = filterStatuses.split(","); // value => two date input values
-        console.log(start, end);
+
         //If one filter defined and date is null filter it
         if ((start || end) && !date) return false;
         if (start && !end) {

@@ -27,7 +27,6 @@ type Props = {
   };
 };
 export default function EditInventory({ params }: Props) {
-  console.log(params.inventoryId);
   const { inventory, products } = useTodo();
 
   const inventoryData = inventory.find(

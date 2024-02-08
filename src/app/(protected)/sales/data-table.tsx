@@ -59,10 +59,6 @@ export function ProductDataTable<TData, TValue>({
 
   const [paidFilter, setPaidFilter] = useState<string[]>([]);
 
-  console.log(columnFilters);
-
-  console.log(data);
-
   const table = useReactTable({
     data,
     columns,
@@ -189,9 +185,8 @@ export function ProductDataTable<TData, TValue>({
                       } else {
                         arr.splice(arr.indexOf(p), 1); //deleting
                       }
-                      console.log(arr);
+
                       setPaidFilter([...arr]);
-                      console.log(paidFilter);
                     }}
                   >
                     <div

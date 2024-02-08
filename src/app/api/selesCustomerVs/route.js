@@ -4,11 +4,7 @@ export const POST = async (request) => {
   const { min, max } = await request.json();
 
   try {
-    console.log(min, max);
-
     const salesData = await services.GetAllSeles();
-
-    console.log(salesData);
 
     const filteredSales = salesData.filter((sale) => {
       const date = sale.datetime;
@@ -23,8 +19,6 @@ export const POST = async (request) => {
         );
       } else return true;
     });
-
-    console.log(filteredSales);
 
     // make the sale by unregistered customer customer:"XXX" first
 
@@ -54,11 +48,7 @@ export const POST = async (request) => {
       };
     });
 
-    console.log(customersObject);
-
     const Customer = Object.values(customersObject);
-
-    console.log(Customer);
 
     return new Response(
       JSON.stringify({

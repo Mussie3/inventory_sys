@@ -41,8 +41,6 @@ export const POST = async (request) => {
 
     const salesData = await services.GetAllSeles();
 
-    console.log(salesData);
-
     const filteredTodaySales = salesData.filter((ex) => {
       const date = ex.datetime;
       if (today.min && !today.max) {
@@ -56,7 +54,6 @@ export const POST = async (request) => {
         );
       } else return true;
     });
-    console.log(filteredTodaySales);
 
     const filteredWeekSales = salesData.filter((ex) => {
       const date = ex.datetime;
@@ -71,7 +68,6 @@ export const POST = async (request) => {
         );
       } else return true;
     });
-    console.log(filteredWeekSales);
     const filteredMonthSales = salesData.filter((ex) => {
       const date = ex.datetime;
       if (thisMonth.min && !thisMonth.max) {
@@ -85,8 +81,6 @@ export const POST = async (request) => {
         );
       } else return true;
     });
-
-    console.log(filteredMonthSales);
 
     let TodayCash = 0;
     let WeekCash = 0;
@@ -131,7 +125,6 @@ export const POST = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to Get Total expanse", { status: 500 });
   }
 };

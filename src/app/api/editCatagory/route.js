@@ -4,8 +4,6 @@ export const POST = async (request) => {
   const { catagorys } = await request.json();
 
   try {
-    console.log(catagorys);
-
     for (let i = 0; i < catagorys.length; i++) {
       const gg = await services.EditCatagory(
         catagorys[i].docId,

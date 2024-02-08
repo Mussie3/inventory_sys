@@ -61,7 +61,6 @@ export function ComboboxProduct({ list, setItems }: Props) {
       image: c.image,
     };
   });
-  console.log(FW);
 
   function addproduct() {
     if (selectedProduct) {
@@ -98,8 +97,6 @@ export function ComboboxProduct({ list, setItems }: Props) {
   }
 
   function AddProductById(event: any) {
-    console.log(event.clipboardData.getData("text/plain"));
-
     const value = event?.clipboardData?.getData("text/plain");
 
     setTimeout(() => {
@@ -112,14 +109,11 @@ export function ComboboxProduct({ list, setItems }: Props) {
   }
 
   function AddProductByIdButton() {
-    console.log(pestedProductId);
-
     setPestedValue(pestedProductId);
     setPestedProductId("");
   }
 
   React.useEffect(() => {
-    console.log(pestedValue);
     if (pestedValue != "") {
       let newItems;
       setItems((pre: Items[]) => {
@@ -184,34 +178,7 @@ export function ComboboxProduct({ list, setItems }: Props) {
                     {list.map((framework) => (
                       <CommandItem
                         key={framework.docId}
-                        // value={framework.product_name}
                         onSelect={() => {
-                          // const arr: any = value;
-                          // const found = arr.find(
-                          //   (a: any) => a.docId === framework.docId
-                          // );
-                          // if (!found) {
-                          //   //checking weather array contain the id
-                          //   arr.push(framework); //adding to array because value doesnt exists
-                          // } else {
-                          //   arr.splice(arr.indexOf(framework), 1); //deleting
-                          //   // setItems((pre: any) => {
-                          //   //   return pre.map((item: any) => {
-                          //   //     if (item.product.docId == framework.docId) {
-                          //   //       console.log("g");
-                          //   //       return {
-                          //   //         ...item,
-                          //   //         no: item.no + 1,
-                          //   //       };
-                          //   //     }
-                          //   //     return item;
-                          //   //   });
-                          //   // });
-                          // }
-                          // console.log(arr);
-                          // // setCatagoryFilter([...arr]);
-                          // // console.log(catagoryFilter);
-                          // setValue(arr);
                           setSelectedProduct(framework);
                           setOpen(false);
                         }}

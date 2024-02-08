@@ -87,7 +87,6 @@ export default function AddProductForm({
   const [image, setImage] = useState(
     editMode ? { image: defaultValue?.image } : { image: "" }
   );
-  console.log(image);
 
   function fetchProductdata(id: string, newData: any) {
     // setProductsLoading(true);
@@ -168,7 +167,6 @@ export default function AddProductForm({
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       if (response.alreadyExist) {
         throw Error(`a product with ${data.id} already exists`);
       } else {
@@ -181,8 +179,6 @@ export default function AddProductForm({
   }
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-
     setSending(true);
     toast.promise(AddEditProduct(data), {
       loading: "sending data ...",

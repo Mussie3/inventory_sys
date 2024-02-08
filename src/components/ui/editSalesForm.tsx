@@ -97,7 +97,6 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
     setInventory,
     setInventoryLoading,
   } = useTodo();
-  console.log(sale);
   const [sending, setSending] = useState(false);
   let selectedCustomer: any;
   if (sale.customer != "XXXX") {
@@ -167,8 +166,6 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
     selectedCustomer,
   ]);
 
-  console.log(Total);
-
   function fetchSalesdata(senddata: any) {
     // setSalesLoading(true);
     // fetch("/api/getSales")
@@ -182,7 +179,6 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
     //     setSalesLoading(undefined);
     //     console.log(err);
     //   });
-    console.log(senddata);
     const newSales = sales.map((S: Product) => {
       if (S.docId == senddata.salesId) {
         const newSale = {
@@ -381,7 +377,6 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       salesId: sale.docId,
       creditAmount: creditAmount,
     };
-    console.log(senddata);
 
     const res = await fetch("/api/editSales", {
       method: "POST",
@@ -390,7 +385,6 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response);
       if (response.result.edited) {
         fetchSalesdata(senddata);
         fetchInventorydata(senddata);

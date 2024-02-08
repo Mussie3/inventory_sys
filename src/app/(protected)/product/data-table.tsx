@@ -67,8 +67,6 @@ export function ProductDataTable<TData, TValue>({
 
   const [catagoryFilter, setCatagoryFilter] = useState<string[]>([]);
 
-  console.log(columnFilters);
-
   const table = useReactTable({
     data,
     columns,
@@ -150,9 +148,6 @@ export function ProductDataTable<TData, TValue>({
     setMinDate(undefined);
   }
 
-  console.log(catagory);
-
-  console.log(productsLoading);
   if (productsLoading == undefined)
     return (
       <div className="w-full flex justify-center p-24">
@@ -221,9 +216,7 @@ export function ProductDataTable<TData, TValue>({
                         } else {
                           arr.splice(arr.indexOf(cat.catagoryName), 1); //deleting
                         }
-                        console.log(arr);
                         setCatagoryFilter([...arr]);
-                        console.log(catagoryFilter);
                       }}
                     >
                       {cat.catagoryName}

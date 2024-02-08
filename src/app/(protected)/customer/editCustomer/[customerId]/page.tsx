@@ -20,12 +20,9 @@ type Props = {
   };
 };
 export default function EditCustomer({ params }: Props) {
-  console.log(params.customerId);
   const { customer } = useTodo();
 
   const userData = customer.find((c: Customer) => c.docId == params.customerId);
-
-  console.log(userData);
 
   if (!userData) return null;
 

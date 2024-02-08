@@ -31,7 +31,7 @@ function getMonthStartAndEndDates() {
     const startDate = new Date(currentYear, month, 1);
     const endDate = new Date(currentYear, month + 1, 0);
     const name = startDate.toLocaleString("default", { month: "long" });
-    console.log(name);
+
     result.push({ start: startDate, end: endDate, month: name });
   }
 
@@ -80,21 +80,16 @@ function filterWithDate(min, max, salesData) {
 export const GET = async (request) => {
   try {
     const monthDates = getMonthStartAndEndDates();
-    console.log(monthDates);
 
     const datesForCurrentMonth = getDatesForCurrentMonth();
-    console.log(datesForCurrentMonth);
 
     const weekDates = getWeekDates();
-    console.log(weekDates);
 
     const salesData = await services.GetAllSeles();
 
-    console.log(salesData);
-
     const currentYearSales = monthDates.map((mon) => {
       const filtered = filterWithDate(mon.start, mon.end, salesData);
-      console.log(filtered);
+
       let sum = 0;
 
       filtered.forEach((item) => {
@@ -106,11 +101,10 @@ export const GET = async (request) => {
         sum: sum,
       };
     });
-    console.log(currentYearSales);
 
     const currentMonthSales = datesForCurrentMonth.map((day) => {
       const filtered = filterWithDate(day.startDate, day.endDate, salesData);
-      console.log(filtered);
+
       let sum = 0;
 
       filtered.forEach((item) => {
@@ -122,11 +116,10 @@ export const GET = async (request) => {
         sum: sum,
       };
     });
-    console.log(currentMonthSales);
 
     const currentWeekSales = weekDates.map((day) => {
       const filtered = filterWithDate(day.startDate, day.endDate, salesData);
-      console.log(filtered);
+
       let sum = 0;
 
       filtered.forEach((item) => {
@@ -138,7 +131,6 @@ export const GET = async (request) => {
         sum: sum,
       };
     });
-    console.log(currentWeekSales);
 
     return new Response(
       JSON.stringify({

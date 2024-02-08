@@ -2,7 +2,7 @@ import services from "@/services/connect";
 
 export const POST = async (request) => {
   const { inventoryId, history } = await request.json();
-  console.log(inventoryId, history);
+
   try {
     const data = await services.GetInventoryById(inventoryId);
 
@@ -30,7 +30,6 @@ export const POST = async (request) => {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
     return new Response("Failed to create a new prompt", { status: 500 });
   }
 };

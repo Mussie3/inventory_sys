@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function EditExapnsePage({ params }: Props) {
-  console.log(params.expanseId);
   const { expanse } = useTodo();
 
   const expanseData = expanse.find((u: Expanse) => u.docId == params.expanseId);

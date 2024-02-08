@@ -26,7 +26,6 @@ const services = {
       const id = await addDoc(usersref, { ...user });
       return id;
     } catch (err) {
-      console.log(err);
       return "something went wrong";
     }
   },
@@ -45,7 +44,6 @@ const services = {
       );
       return custemerid.id;
     } catch (err) {
-      console.log(err);
       return "something went wrong";
     }
   },
@@ -64,12 +62,10 @@ const services = {
       );
       return data.id;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
   AddInventory: async (productId) => {
-    console.log(productId);
     const inventoryref = collection(db, "Inventory");
 
     try {
@@ -97,7 +93,6 @@ const services = {
       );
       return data.id;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -116,7 +111,6 @@ const services = {
       );
       return data.id;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -135,7 +129,6 @@ const services = {
       );
       return data.id;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -154,7 +147,6 @@ const services = {
       );
       return expanseid.id;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -173,7 +165,6 @@ const services = {
       );
       return data.id;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -189,7 +180,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return false;
     }
   },
@@ -205,7 +195,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return false;
     }
   },
@@ -221,7 +210,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return false;
     }
   },
@@ -239,7 +227,6 @@ const services = {
 
       return true;
     } catch (err) {
-      console.log(err);
       return null;
     }
   },
@@ -257,7 +244,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -274,7 +260,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -290,7 +275,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return false;
     }
   },
@@ -307,12 +291,10 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
   AddToInventory: async (id, addedAmount, currentAmount) => {
-    console.log(id, addedAmount);
     const productsref = doc(db, "Inventory", id);
 
     try {
@@ -330,7 +312,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -339,22 +320,18 @@ const services = {
     try {
       const data = await getDocs(usersref, fetchCache);
       const allusers = data.docs.map((doc) => doc.data());
-      console.log(allusers);
       return allusers;
     } catch (err) {
       throw Error;
     }
   },
   GetAllCatagorys: async () => {
-    console.log("g");
     const catagorysref = collection(db, "Catagorys");
     try {
       const data = await getDocs(catagorysref, fetchCache);
-      console.log("g");
       const allcatagorys = data.docs.map((doc) => doc.data());
       return allcatagorys;
     } catch (err) {
-      console.log(err);
       throw Error;
     }
   },
@@ -414,18 +391,15 @@ const services = {
       await deleteDoc(customerref);
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
   DeleteProduct: async (Id) => {
     const productref = doc(db, "Products", Id);
-    console.log(Id);
     try {
       await deleteDoc(productref);
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -444,7 +418,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -454,7 +427,6 @@ const services = {
       await deleteDoc(salesref);
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -464,7 +436,6 @@ const services = {
       await deleteDoc(expanseref);
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -474,19 +445,15 @@ const services = {
       await deleteDoc(userref);
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
   UploadImage: async (file) => {
-    console.log(file);
     const name = file.name;
     const storageRef = ref(storage, `image/${name}`);
-    console.log(storage);
     try {
       const uploadTask = uploadBytesResumable(storageRef, file);
       let url;
-      console.log(uploadTask);
       // Register three observers:
       // 1. 'state_changed' observer, called any time the state changes
       // 2. Error observer, called on failure
@@ -509,23 +476,18 @@ const services = {
           // }
         },
         (err) => {
-          console.log(err);
           // Handle unsuccessful uploads
         },
         () => {
-          console.log("uploaded?");
           // Handle successful uploads on complete
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log(downloadURL);
             url = downloadURL;
-            console.log("File available at", downloadURL);
           });
         }
       );
       return url;
     } catch (err) {
-      console.log(err);
       return "something went wrong";
     }
   },
@@ -597,7 +559,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return undefined;
     }
   },
@@ -617,7 +578,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return "something went wrong";
     }
   },
@@ -634,7 +594,6 @@ const services = {
       );
       return true;
     } catch (err) {
-      console.log(err);
       return "something went wrong";
     }
   },

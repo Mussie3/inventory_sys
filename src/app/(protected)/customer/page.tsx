@@ -38,7 +38,6 @@ type Customer = {
 
 export default function Customer() {
   const { customer, setCustomer, setCustomerLoading } = useTodo();
-  console.log(customer);
 
   function fetchCustomerdata(id: string) {
     // fetch("/api/getCustomers")
@@ -52,12 +51,7 @@ export default function Customer() {
     setCustomer(newCustomer);
   }
 
-  useEffect(() => {
-    console.log("change");
-  }, [customer]);
-
   async function deleteCustomer(id: string) {
-    console.log(id);
     const res = await fetch("/api/deleteCustomer", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -65,7 +59,7 @@ export default function Customer() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.success);
+
       if (response.success) fetchCustomerdata(id);
       return response.success;
     }
@@ -176,8 +170,7 @@ export default function Customer() {
         if (filterStatuses.length === 0) return true;
         const credit: any = row.getValue(columnId);
         // value => two date input values
-        console.log(filterStatuses);
-        console.log(credit);
+
         //If one filter defined and date is null filter it
         if (filterStatuses.includes(credit.allowed)) return true;
         else return false;
@@ -201,8 +194,7 @@ export default function Customer() {
         if (filterStatuses.length === 0) return true;
         const credit: any = row.getValue(columnId);
         // value => two date input values
-        console.log(filterStatuses);
-        console.log(credit);
+
         //If one filter defined and date is null filter it
         if (filterStatuses.includes(credit.allowed)) return true;
         else return false;

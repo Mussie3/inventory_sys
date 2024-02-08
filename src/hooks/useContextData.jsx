@@ -24,7 +24,6 @@ export function DataProvider({ children }) {
   const [expanseLoading, setExpanseLoading] = useState(true);
 
   function fetchAllPagedata() {
-    console.log("ff");
     setProductsLoading(true);
     setCatagoryLoading(true);
     setCustomerLoading(true);
@@ -33,11 +32,11 @@ export function DataProvider({ children }) {
     setUsersLoading(true);
     setExpanseLoading(true);
     fetch("/api/getAllPagesData", {
+      method: "POST",
       cache: "no-store",
     })
       .then((response) => response.json())
       .then((alldata) => {
-        console.log(alldata);
         const data = alldata.AllResults;
         if (data[0].status == "fulfilled") {
           setProducts(data[0].value);
@@ -90,12 +89,10 @@ export function DataProvider({ children }) {
         setSalesLoading(undefined);
         setUsersLoading(undefined);
         setExpanseLoading(undefined);
-        console.log(err);
       });
   }
 
   useEffect(() => {
-    console.log("ff");
     fetchAllPagedata();
   }, []);
 

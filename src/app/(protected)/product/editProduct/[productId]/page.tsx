@@ -20,13 +20,11 @@ type Props = {
   };
 };
 export default function EditProduct({ params }: Props) {
-  console.log(params.productId);
   const { products } = useTodo();
 
   const productData = products.find(
     (p: Product) => p.docId == params.productId
   );
-  console.log(productData);
 
   if (!productData) return null;
   return (

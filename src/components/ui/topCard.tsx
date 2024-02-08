@@ -40,7 +40,6 @@ export default function TopCard({ no, path, timeLabel }: Props) {
   const now = new Date();
   now.setDate(now.getDate() + 1);
   const nowPlusone = now.toISOString().slice(0, 10);
-  console.log(nowPlusone, now);
 
   useEffect(() => {
     const Data =
@@ -59,7 +58,6 @@ export default function TopCard({ no, path, timeLabel }: Props) {
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log(data);
         setData(data);
       });
   }, [path, timeLabel, nowPlusone, no]);

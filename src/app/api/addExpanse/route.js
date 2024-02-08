@@ -9,11 +9,9 @@ export const POST = async (request) => {
     amount,
     datetime: new Date().toISOString(),
   };
-  console.log(newExpanse);
 
   try {
     const expanseDocId = await services.AddExpanse(newExpanse);
-    console.log(expanseDocId);
 
     return new Response(
       JSON.stringify({
@@ -25,7 +23,6 @@ export const POST = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to create a new Expanse", { status: 500 });
   }
 };

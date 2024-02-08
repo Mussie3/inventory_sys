@@ -69,8 +69,6 @@ export function InventoryDataTable<TData, TValue>({
 
   const [catagoryFilter, setCatagoryFilter] = useState<string[]>([]);
 
-  console.log(columnFilters);
-
   const table = useReactTable({
     data,
     columns,
@@ -208,9 +206,8 @@ export function InventoryDataTable<TData, TValue>({
                         } else {
                           arr.splice(arr.indexOf(cat.catagoryName), 1); //deleting
                         }
-                        console.log(arr);
+
                         setCatagoryFilter([...arr]);
-                        console.log(catagoryFilter);
                       }}
                     >
                       {cat.catagoryName}

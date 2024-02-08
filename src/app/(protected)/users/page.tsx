@@ -31,8 +31,6 @@ type User = {
 export default function Users() {
   const { users, setUsers } = useTodo();
 
-  console.log(users);
-
   function fetchUsersdata(id: string) {
     // fetch("/api/getUsers")
     //   .then((response) => response.json())
@@ -59,7 +57,6 @@ export default function Users() {
   });
 
   async function deleteUser(id: string) {
-    console.log(id);
     const res = await fetch("/api/deleteUser", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -67,7 +64,6 @@ export default function Users() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.success);
       if (response.success) fetchUsersdata(id);
       return response.success;
     }
@@ -167,7 +163,6 @@ export default function Users() {
       filterFn: (row, columnId, filterStatuses) => {
         const date: any = row.getValue(columnId);
         const [start, end] = filterStatuses.split(","); // value => two date input values
-        console.log(start, end);
         //If one filter defined and date is null filter it
         if ((start || end) && !date) return false;
         if (start && !end) {

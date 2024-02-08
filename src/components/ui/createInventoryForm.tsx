@@ -45,7 +45,6 @@ export default function CreateInventoryForm({ product }: Props) {
   } = useTodo();
   const [items, setItems] = useState<Product>();
   const [sending, setSending] = useState(false);
-  console.log(product);
 
   const router = useRouter();
 
@@ -100,7 +99,6 @@ export default function CreateInventoryForm({ product }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response);
       if (response.result) {
         fetchInventorydata(response.result, productId);
         return response.result;
@@ -109,8 +107,6 @@ export default function CreateInventoryForm({ product }: Props) {
     }
   }
   async function onSubmit(productId: string) {
-    console.log();
-
     setSending(true);
     toast.promise(creatingInventory(productId), {
       loading: "Creating Inventory ...",

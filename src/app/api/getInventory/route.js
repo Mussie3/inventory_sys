@@ -1,11 +1,8 @@
 import services from "@/services/connect";
 
 export const GET = async (request) => {
-  console.log("Inventory");
   try {
     const Inventory = await services.GetAllInventorys();
-
-    console.log(Inventory);
 
     if (!Inventory) {
       throw Error;
@@ -20,7 +17,6 @@ export const GET = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to get Catagorys", { status: 500 });
   }
 };

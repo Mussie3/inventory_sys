@@ -15,11 +15,7 @@ export const POST = async (request) => {
       datetime: new Date().toISOString(),
     };
 
-    console.log(newCustomer);
-
     const newUserId = await services.AddUsers(newCustomer);
-
-    console.log(newUserId);
 
     return new Response(JSON.stringify({ result: newUserId }), {
       status: 200,

@@ -44,7 +44,6 @@ type Props = {
 export function EditExpanse({ oldexpanse }: Props) {
   const { expanse, setExpanse, setExpanseLoading } = useTodo();
   const [sending, setSending] = useState(false);
-  console.log(oldexpanse);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -87,7 +86,6 @@ export function EditExpanse({ oldexpanse }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response);
       if (!response.updated) {
         throw Error("Expanse not updated");
       }

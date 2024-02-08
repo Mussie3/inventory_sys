@@ -102,7 +102,6 @@ export default function AddInventoryForm({
       ...data,
       inventoryId: inventoryId,
     };
-    console.log(postdata);
     const res = await fetch("/api/addInventory", {
       method: "POST",
       body: JSON.stringify(postdata),
@@ -110,7 +109,6 @@ export default function AddInventoryForm({
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchInventorydata(postdata);
       router.push(`/inventory/`);
       return response.result;
@@ -119,7 +117,6 @@ export default function AddInventoryForm({
   }
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
     setSending(true);
     toast.promise(AddToInventory(data), {
       loading: "sending data ...",

@@ -43,8 +43,6 @@ type Product = {
 
 export default function Products() {
   const { products, setProducts, catagory } = useTodo();
-  console.log(products);
-  console.log(catagory);
 
   const productsData = products.map((P: Product) => {
     return {
@@ -67,7 +65,6 @@ export default function Products() {
   }
 
   async function deleteProduct(id: string) {
-    console.log(id);
     const res = await fetch("/api/deleteProduct", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -75,7 +72,7 @@ export default function Products() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.success);
+
       if (response.success) fetchProductdata(id);
       return response.success;
     }
@@ -147,8 +144,7 @@ export default function Products() {
         if (filterStatuses.length === 0) return true;
         const catagory: any = row.getValue(columnId);
         // value => two date input values
-        console.log(filterStatuses);
-        console.log(catagory);
+
         //If one filter defined and date is null filter it
         if (filterStatuses.includes(catagory)) return true;
         else return false;
@@ -205,7 +201,7 @@ export default function Products() {
       filterFn: (row, columnId, filterStatuses) => {
         const date: any = row.getValue(columnId);
         const [start, end] = filterStatuses.split(","); // value => two date input values
-        console.log(start, end);
+
         //If one filter defined and date is null filter it
         if ((start || end) && !date) return false;
         if (start && !end) {
@@ -276,10 +272,6 @@ export default function Products() {
       },
     },
   ];
-
-  useEffect(() => {
-    console.log("change");
-  }, [products, catagory]);
 
   return (
     <main className="flex flex-col h-full w-full justify-between p-12 gap-8">

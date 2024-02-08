@@ -57,7 +57,6 @@ export function AddExpanse() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.added);
       fetchExpansedata(response.added, data);
       router.push(`/expanse/`);
       return response.result;

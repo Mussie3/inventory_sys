@@ -31,8 +31,6 @@ type Expanse = {
 export default function Users() {
   const { expanse, setExpanse } = useTodo();
 
-  console.log(expanse);
-
   function fetchExpansedata(id: string) {
     const newExpanse = expanse.filter((ex: Expanse) => ex.docId != id);
     setExpanse(newExpanse);
@@ -47,7 +45,6 @@ export default function Users() {
   });
 
   async function deleteExpanse(id: string) {
-    console.log(id);
     const res = await fetch("/api/deleteExpanse", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -55,7 +52,6 @@ export default function Users() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.success);
       if (response.success) fetchExpansedata(id);
       return response.success;
     }
@@ -125,7 +121,6 @@ export default function Users() {
       filterFn: (row, columnId, filterStatuses) => {
         const date: any = row.getValue(columnId);
         const [start, end] = filterStatuses.split(","); // value => two date input values
-        console.log(start, end);
         //If one filter defined and date is null filter it
         if ((start || end) && !date) return false;
         if (start && !end) {

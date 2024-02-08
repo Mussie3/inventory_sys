@@ -4,13 +4,8 @@ export const POST = async (request) => {
   const { No } = await request.json();
 
   try {
-    console.log(No);
-
     const productData = await services.GetAllProducts();
     const InventoryData = await services.GetAllInventorys();
-
-    console.log(productData);
-    console.log(InventoryData);
 
     const productPrice = {};
 
@@ -50,8 +45,6 @@ export const POST = async (request) => {
       };
     });
 
-    console.log(productObject);
-
     const Product = Object.values(productObject).map((pro) => {
       return {
         ...pro,
@@ -61,10 +54,6 @@ export const POST = async (request) => {
     });
 
     const Catagory = Object.values(catagoryObject);
-
-    console.log(Catagory);
-
-    console.log(Product);
 
     const TopByNo = Array.from({ length: No }, () => {
       return { price: 0, no: 0 };
@@ -93,9 +82,6 @@ export const POST = async (request) => {
       }
     });
 
-    console.log(TopByNo);
-    console.log(TopByPrice);
-
     const TopByNoC = Array.from({ length: No }, () => {
       return { price: 0, no: 0 };
     });
@@ -122,9 +108,6 @@ export const POST = async (request) => {
         }
       }
     });
-
-    console.log(TopByNoC);
-    console.log(TopByPriceC);
 
     return new Response(
       JSON.stringify({

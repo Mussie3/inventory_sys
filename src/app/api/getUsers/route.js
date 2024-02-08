@@ -1,11 +1,8 @@
 import services from "@/services/connect";
 
 export const GET = async (request) => {
-  console.log("Users");
   try {
     const Users = await services.GetAllUsers();
-
-    console.log(Users);
 
     if (!Users) {
       throw Error;
@@ -20,7 +17,6 @@ export const GET = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to get Catagorys", { status: 500 });
   }
 };

@@ -11,13 +11,9 @@ export const POST = async (request) => {
     creditAmount,
   } = await request.json();
 
-  console.log(items, salesId);
-
   try {
     const Allinventory = await services.GetAllInventorys();
     const oldSales = await services.GetSalesById(salesId);
-
-    console.log(oldSales);
 
     // undo the sale if the product is not there and do deffeence if it does
 
@@ -48,12 +44,7 @@ export const POST = async (request) => {
         };
       });
 
-    console.log(addedProduct);
-    console.log(deletedProduct);
-    console.log(updatedProduct);
-
     const arr = [].concat(addedProduct, deletedProduct, updatedProduct);
-    console.log(arr);
 
     arr.forEach((item) => {
       const inv = Allinventory.filter(
@@ -86,12 +77,9 @@ export const POST = async (request) => {
       }
       if (oldSales.customer !== "XXXX") {
         const oldcustomer = await services.GetCustomerById(oldSales.customer);
-        console.log(oldcustomer);
         const oldcustomerHistory = oldcustomer.history.filter(
           (h) => h !== salesId
         );
-
-        console.log(oldcustomerHistory);
 
         let cuData;
         if (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") {
@@ -154,13 +142,10 @@ export const POST = async (request) => {
     let err = [];
 
     for (let i = 0; i < arr.length; i++) {
-      console.log(arr[i]);
       const inv = Allinventory.filter(
         (p) => p.productId === arr[i].productDocId
       )[0];
       const currentAmount = inv.currentAmount - arr[i].no;
-      console.log(inv.docId);
-      console.log(currentAmount);
       const good = await services.SubInventory(inv.docId, currentAmount);
       if (!good) err.push(arr[i].productDocId);
     }
@@ -190,7 +175,6 @@ export const POST = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to create a new prompt", { status: 500 });
   }
 };

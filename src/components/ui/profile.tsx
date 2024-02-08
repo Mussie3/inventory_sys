@@ -34,8 +34,6 @@ export default function Profile({ user }: Props) {
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
 
-  console.log(currentUserData);
-
   const router = useRouter();
 
   function fetchUsersdata(newdata: any) {
@@ -110,7 +108,6 @@ export default function Profile({ user }: Props) {
         throw Error(`Username '${currentUserData.username}' exists`);
       }
     }
-    console.log(newdata);
     const res = await fetch("/api/editUser", {
       method: "POST",
       body: JSON.stringify(newdata),
@@ -118,7 +115,6 @@ export default function Profile({ user }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response);
       if (!response.passwordMatch) {
         alert("Current Password Doesn't match");
       }

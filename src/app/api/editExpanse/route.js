@@ -9,14 +9,13 @@ export const POST = async (request) => {
       discription,
       amount,
     };
-    console.log(newExpanse);
+
     const updated = await services.EditExpanse(newExpanse, docId);
 
     return new Response(JSON.stringify({ updated: updated }), {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
     return new Response("Failed to upadte a expanse", { status: 500 });
   }
 };

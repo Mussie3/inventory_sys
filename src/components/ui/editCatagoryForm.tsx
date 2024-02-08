@@ -53,7 +53,6 @@ export default function EditCatagoryForm({ catagory }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchCatagorydata();
       router.push(`/product/`);
       return response.result;
@@ -62,8 +61,6 @@ export default function EditCatagoryForm({ catagory }: Props) {
   }
 
   async function onSubmit() {
-    console.log(catagorys);
-
     setSending(true);
     toast.promise(EditCatagory(), {
       loading: "sending data ...",

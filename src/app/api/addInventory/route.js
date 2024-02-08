@@ -2,7 +2,7 @@ import services from "@/services/connect";
 
 export const POST = async (request) => {
   const { inventoryId, addedAmount } = await request.json();
-  console.log(inventoryId, addedAmount);
+
   try {
     const data = await services.GetInventoryById(inventoryId);
 

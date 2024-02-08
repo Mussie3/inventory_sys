@@ -3,8 +3,6 @@ import services from "@/services/connect";
 export const POST = async (request) => {
   const { catagoryName } = await request.json();
 
-  console.log(catagoryName);
-
   try {
     const catagory = {
       datetime: new Date().toISOString(),
@@ -22,7 +20,6 @@ export const POST = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to create a new prompt", { status: 500 });
   }
 };

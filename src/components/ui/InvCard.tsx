@@ -9,7 +9,6 @@ type Props = {
 };
 export default function InvCard({ no, Labal }: Props) {
   const { catagory } = useTodo();
-  console.log(catagory);
   const [data, setData] = useState<any | null>();
 
   const type = Labal == "Product" ? "topByNo" : "topByNoC";
@@ -26,17 +25,12 @@ export default function InvCard({ no, Labal }: Props) {
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log(data);
         setData(data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, [no]);
 
   if (!data) return null;
-
-  console.log(data);
 
   return (
     <div className="border rounded-md p-6 min-w-[300px]">

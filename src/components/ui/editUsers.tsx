@@ -66,7 +66,6 @@ export function EditUsers({ user }: Props) {
   const [hideCurrentPassword, setHideCurrentPassword] = useState(true);
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
-  console.log(user);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -136,7 +135,6 @@ export function EditUsers({ user }: Props) {
         (newdata.currentPassword = currentPassword);
       newdata.newPassword = newPassword;
     }
-    console.log(newdata);
 
     const Userexist = await fetch("/api/userExists", {
       method: "POST",
@@ -145,7 +143,6 @@ export function EditUsers({ user }: Props) {
 
     if (Userexist.ok) {
       const response = await Userexist.json();
-      console.log(response.exist);
       if (response.exist) {
         throw Error(`Username '${data.username}' exists`);
       }
@@ -157,7 +154,6 @@ export function EditUsers({ user }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response);
       if (!response.passwordMatch) {
         throw Error("Current Password Doesn't match");
       }

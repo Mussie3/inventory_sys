@@ -28,7 +28,7 @@ export const POST = async (request) => {
       discount: Number(discount),
       history: [],
     };
-    console.log(newCustomer);
+
     const newCustomerId = await services.AddCustomer(newCustomer);
 
     return new Response(JSON.stringify({ result: newCustomerId }), {

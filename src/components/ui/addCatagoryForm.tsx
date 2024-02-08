@@ -69,7 +69,6 @@ export default function AddCatagoryForm() {
     const postdata = {
       catagoryName: data.newCatagory,
     };
-    console.log(postdata);
     const res = await fetch("/api/addCatagory", {
       method: "POST",
       body: JSON.stringify(postdata),
@@ -77,7 +76,6 @@ export default function AddCatagoryForm() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchCatagorydata(response.result, postdata);
       router.push(`/product/`);
       return response.result;
@@ -86,7 +84,6 @@ export default function AddCatagoryForm() {
   }
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
     setSending(true);
     toast.promise(AddCatagory(data), {
       loading: "sending data ...",

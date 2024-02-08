@@ -62,17 +62,13 @@ export default function PieChartData({ Labal }: Props) {
   const [filterDate, setFilterDate] = useState("thisWeek");
   const [loading, setLoading] = useState<boolean | undefined>(true);
 
-  console.log("g");
-
   const path = Labal == "Catagory" ? "topCatagorys" : "selesCustomerVs";
 
   const now = new Date();
   now.setDate(now.getDate() + 1);
   const nowPlusone = now.toISOString().slice(0, 10);
-  console.log(nowPlusone, now);
 
   useEffect(() => {
-    console.log("g");
     const Data =
       filterDate == "thisWeek"
         ? {
@@ -98,13 +94,11 @@ export default function PieChartData({ Labal }: Props) {
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log(data);
         setData(data);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(undefined);
-        console.log(err);
       });
   }, [filterDate, catagory.length, nowPlusone, path]);
 

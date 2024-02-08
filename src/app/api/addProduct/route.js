@@ -15,18 +15,15 @@ export const POST = async (request) => {
     product_name,
     datetime: new Date().toISOString(),
   };
-  console.log(newProduct);
 
   try {
     const Allproducts = await services.GetAllProducts();
 
     const alreadyExist = Allproducts.filter((p) => p.id === newProduct.id)[0];
-    console.log(alreadyExist);
 
     let productDocId;
     if (!alreadyExist) {
       productDocId = await services.AddProduct(newProduct);
-      console.log(productDocId);
     } else {
       productDocId = alreadyExist.docId;
     }
@@ -41,7 +38,6 @@ export const POST = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to create a new prompt", { status: 500 });
   }
 };

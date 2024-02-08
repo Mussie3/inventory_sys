@@ -85,8 +85,6 @@ export default function AddSalesForm() {
   const [creditAmount, setCreditAmount] = useState<number>(0);
   const [Incash, setIncash] = useState<number>(0);
 
-  console.log(selectedCustomer);
-
   const router = useRouter();
   let SubTotal: number = 0;
 
@@ -251,7 +249,6 @@ export default function AddSalesForm() {
       paidIn: paidIn,
       creditAmount: creditAmount,
     };
-    console.log(senddata);
 
     const res = await fetch("/api/addSales", {
       method: "POST",
@@ -260,7 +257,6 @@ export default function AddSalesForm() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response);
       if (response.result.created) {
         fetchSalesdata(response.result.created, senddata);
         fetchInventorydata(senddata);

@@ -67,8 +67,6 @@ function getdata(data: any, d: any) {
 }
 
 export async function SalseToExcel(ViewSale: any) {
-  console.log(ViewSale);
-
   let columns: IJsonSheet[] = [
     {
       sheet: "Sales",
@@ -111,8 +109,6 @@ export async function SalseToExcel(ViewSale: any) {
 }
 
 export async function InventoryToExcel(Inventory: any) {
-  console.log(Inventory);
-
   let columns: IJsonSheet[] = [
     {
       sheet: "Inventory",

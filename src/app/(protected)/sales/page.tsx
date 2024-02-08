@@ -124,7 +124,6 @@ export default function Sales() {
   });
 
   async function deleteSales(id: string) {
-    console.log(id);
     const res = await fetch("/api/deleteSales", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -132,7 +131,7 @@ export default function Sales() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.success);
+
       if (response.success) fetchSalesdata(id);
       return response.success;
     }
@@ -170,7 +169,7 @@ export default function Sales() {
       accessorKey: "productsD",
       cell: ({ row }) => {
         const Allproducts: Product[] = row.getValue("productsD");
-        console.log(Allproducts);
+
         const Allnames = Allproducts.map((g) => g.product_name);
 
         return <div className="">{Allnames.join(" , ")}</div>;
@@ -256,8 +255,7 @@ export default function Sales() {
         if (filterStatuses.length === 0) return true;
         const paidIn: any = row.getValue(columnId);
         // value => two date input values
-        console.log(filterStatuses);
-        console.log(paidIn);
+
         //If one filter defined and date is null filter it
         if (filterStatuses.includes(paidIn)) return true;
         else return false;
@@ -309,7 +307,7 @@ export default function Sales() {
       filterFn: (row, columnId, filterStatuses) => {
         const date: any = row.getValue(columnId);
         const [start, end] = filterStatuses.split(","); // value => two date input values
-        console.log(start, end);
+
         //If one filter defined and date is null filter it
         if ((start || end) && !date) return false;
         if (start && !end) {
@@ -333,7 +331,7 @@ export default function Sales() {
           typeof rowdata.customerD == "object"
             ? rowdata.customerD.first_name
             : "XXXX";
-        console.log(name);
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

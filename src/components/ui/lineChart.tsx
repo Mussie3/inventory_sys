@@ -74,13 +74,11 @@ export default function RenderLineChart() {
     const res = fetch(`/api/allTotalSales`)
       .then((response) => response.json())
       .then((data: any) => {
-        console.log(data);
         setData(data);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(undefined);
-        console.log(err);
       });
   }, []);
 

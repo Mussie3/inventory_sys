@@ -28,7 +28,6 @@ type Props = {
   };
 };
 export default function AddInventoryID({ params }: Props) {
-  console.log(params.inventoryId);
   const { inventory, products } = useTodo();
 
   const inventoryData = inventory.find(

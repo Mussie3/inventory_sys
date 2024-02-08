@@ -4,13 +4,8 @@ export const POST = async (request) => {
   const { min, max, No } = await request.json();
 
   try {
-    console.log(min, max, No);
-
     const customersData = await services.GetAllCustomers();
     const salesData = await services.GetAllSeles();
-
-    console.log(customersData);
-    console.log(salesData);
 
     const filteredSales = salesData.filter((sale) => {
       const date = sale.datetime;
@@ -26,8 +21,6 @@ export const POST = async (request) => {
       } else return true;
     });
 
-    console.log(filteredSales);
-
     const customerName = {};
 
     const customersObject = {};
@@ -38,8 +31,6 @@ export const POST = async (request) => {
         last_name: item.last_name,
       };
     });
-
-    console.log(customerName);
 
     filteredSales.forEach((sale) => {
       const items = sale.items;
@@ -61,16 +52,12 @@ export const POST = async (request) => {
       };
     });
 
-    console.log(customersObject);
-
     const Customer = Object.values(customersObject).map((pro) => {
       return {
         ...pro,
         ...customerName[pro.customerId],
       };
     });
-
-    console.log(Customer);
 
     const TopByNo = Array.from({ length: No ? No : 5 }, () => {
       return { price: 0, no: 0 };
@@ -99,8 +86,6 @@ export const POST = async (request) => {
       }
     });
 
-    console.log(TopByNo);
-    console.log(TopByPrice);
     return new Response(
       JSON.stringify({
         result: {

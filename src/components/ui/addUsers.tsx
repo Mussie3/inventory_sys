@@ -54,7 +54,6 @@ export function AddUsers() {
   const [currentUserData, setCurrentUserData] = useState({ image: "" });
   const [hidePassword, setHidePassword] = useState(true);
   const router = useRouter();
-  console.log(users);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -94,7 +93,6 @@ export function AddUsers() {
 
     if (Userexist.ok) {
       const response = await Userexist.json();
-      console.log(response.exist);
       if (response.exist) {
         throw Error(`Username '${data.username}' already exists`);
       }
@@ -106,7 +104,6 @@ export function AddUsers() {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchUsersdata(response.result, data);
       router.push(`/users/`);
       return response.result;

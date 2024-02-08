@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function EditUser({ params }: Props) {
-  console.log(params.userId);
   const { users } = useTodo();
 
   const userData = users.find((u: User) => u.docId == params.userId);

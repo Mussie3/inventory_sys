@@ -16,7 +16,6 @@ export default function ApiCall() {
     // });
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
     }
   }
   return (

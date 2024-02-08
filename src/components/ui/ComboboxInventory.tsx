@@ -39,7 +39,6 @@ type Props = {
 export function ComboboxInventory({ list, setProduct }: Props) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  console.log(value);
   const FW = list.map((c) => {
     return {
       value: c.docId,
@@ -48,12 +47,10 @@ export function ComboboxInventory({ list, setProduct }: Props) {
       image: c.image,
     };
   });
-  console.log(FW);
 
   function selectCustomer() {
     const selectedCustomer = list.filter((c) => c.docId === value)[0];
     setProduct(selectedCustomer);
-    console.log(selectedCustomer);
   }
   const selected = FW.find((framework) => framework.value === value);
 

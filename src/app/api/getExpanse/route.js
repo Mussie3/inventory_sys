@@ -1,11 +1,8 @@
 import services from "@/services/connect";
 
 export const GET = async (request) => {
-  console.log("Customers");
   try {
     const Expanse = await services.GetAllExapase();
-
-    console.log(Expanse);
 
     if (!Expanse) {
       throw Error;
@@ -20,7 +17,6 @@ export const GET = async (request) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return new Response("Failed to get Expanse", { status: 500 });
   }
 };

@@ -15,8 +15,6 @@ const UploadImageToStorage = ({ setURL, path }: props) => {
   const handleSelectedFile = (files: any) => {
     if (files && files[0].size < 10000000) {
       setImageFile(files[0]);
-
-      console.log(files[0]);
     } else {
       console.error("File size to large");
     }
@@ -39,10 +37,8 @@ const UploadImageToStorage = ({ setURL, path }: props) => {
 
           switch (snapshot.state) {
             case "paused":
-              console.log("Upload is paused");
               break;
             case "running":
-              console.log("Upload is running");
               break;
           }
         },

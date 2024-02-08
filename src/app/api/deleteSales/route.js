@@ -14,13 +14,13 @@ export const POST = async (request) => {
     }
 
     const deleted = await services.DeleteSales(id);
-    console.log(deleted);
+
     if (sale.customer != "XXXX") {
       const cu = await services.GetCustomerById(sale.customer);
       let cuData;
-      console.log(cu);
+
       const history = cu.history.filter((s) => s !== sale.docId);
-      console.log(history);
+
       if (sale.paidIn == "credit" || sale.paidIn == "mixed") {
         const used = cu.credit.used - sale.totalAmount;
         cuData = {
@@ -32,19 +32,17 @@ export const POST = async (request) => {
           history: history,
         };
       }
-      console.log(cuData);
+
       addedToCustomer = await services.AddSalesToCustomer(
         sale.customer,
         cuData
       );
-      console.log(cuData);
     }
 
     return new Response(JSON.stringify({ success: deleted }), {
       status: 200,
     });
   } catch (error) {
-    console.log(error);
     return new Response("Failed to create a new prompt", { status: 500 });
   }
 };

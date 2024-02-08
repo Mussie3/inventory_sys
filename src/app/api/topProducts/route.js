@@ -4,13 +4,8 @@ export const POST = async (request) => {
   const { min, max, No } = await request.json();
 
   try {
-    console.log(min, max, No);
-
     const productData = await services.GetAllProducts();
     const salesData = await services.GetAllSeles();
-
-    console.log(productData);
-    console.log(salesData);
 
     const filteredSales = salesData.filter((sale) => {
       const date = sale.datetime;
@@ -25,8 +20,6 @@ export const POST = async (request) => {
         );
       } else return true;
     });
-
-    console.log(filteredSales);
 
     const productPrice = {};
 
@@ -59,8 +52,6 @@ export const POST = async (request) => {
       };
     });
 
-    console.log(Product);
-
     const TopByNo = Array.from({ length: No ? No : 5 }, () => {
       return { price: 0, no: 0 };
     });
@@ -87,9 +78,6 @@ export const POST = async (request) => {
         }
       }
     });
-
-    console.log(TopByNo);
-    console.log(TopByPrice);
 
     return new Response(
       JSON.stringify({

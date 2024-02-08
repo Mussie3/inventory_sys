@@ -52,8 +52,6 @@ export function CustomerDataTable<TData, TValue>({
 
   const [creditFilter, setCreditFilter] = useState<boolean[]>([]);
 
-  //   console.log(rowSelection);
-
   const table = useReactTable({
     data,
     columns,
@@ -129,9 +127,8 @@ export function CustomerDataTable<TData, TValue>({
                       } else {
                         arr.splice(arr.indexOf(p), 1); //deleting
                       }
-                      console.log(arr);
+
                       setCreditFilter([...arr]);
-                      console.log(creditFilter);
                     }}
                   >
                     <div

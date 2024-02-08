@@ -195,7 +195,6 @@ export default function AddCustomerForm({
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchCustomerdata(response.result, newData);
       router.push(`/customer/`);
       return response.result;
@@ -204,8 +203,6 @@ export default function AddCustomerForm({
   }
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-
     setSending(true);
     toast.promise(AddEditCustomer(data), {
       loading: "sending data ...",

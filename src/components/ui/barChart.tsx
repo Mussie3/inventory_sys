@@ -110,7 +110,6 @@ export default function BarChartData({ Labal }: Props) {
   const now = new Date();
   now.setDate(now.getDate() + 1);
   const nowPlusone = now.toISOString().slice(0, 10);
-  console.log(nowPlusone, now);
 
   useEffect(() => {
     const Data =
@@ -123,7 +122,6 @@ export default function BarChartData({ Labal }: Props) {
         : filterDate == "thisMonth"
         ? { min: getFirstDayOfTheMonth(new Date()), max: nowPlusone, No: 5 }
         : { min: getFirstDayOfTheYear(new Date()), max: nowPlusone, No: 5 };
-    console.log(path);
 
     setLoading(true);
     const res = fetch(`/api/${path}`, {
@@ -132,13 +130,11 @@ export default function BarChartData({ Labal }: Props) {
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log(data);
         setData(data);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(undefined);
-        console.log(err);
       });
   }, [filterDate, nowPlusone, path]);
 
@@ -152,7 +148,6 @@ export default function BarChartData({ Labal }: Props) {
       : Labal == "Top Product"
       ? "product_name"
       : "first_name";
-  console.log(keyY);
 
   const tickFormatter = (value: string, index: number) => {
     const limit = 15; // put your maximum character

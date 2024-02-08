@@ -28,7 +28,7 @@ export const POST = async (request) => {
       phone_number,
       discount: Number(discount),
     };
-    console.log(newCustomer);
+
     const newCustomerId = await services.EditCustomer(newCustomer, docId);
 
     return new Response(JSON.stringify({ result: newCustomerId }), {

@@ -13,17 +13,12 @@ export default function CashIncomeCard() {
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log(data);
         setData(data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, []);
 
   if (!data) return null;
-
-  console.log(data);
 
   return (
     <div className="border rounded-md p-6 min-w-[350px]">

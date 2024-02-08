@@ -87,7 +87,6 @@ export default function AddCreditForm({ customerData }: Props) {
       },
       customerId: customerData.docId,
     };
-    console.log(postdata);
     const res = await fetch("/api/addCredit", {
       method: "POST",
       body: JSON.stringify(postdata),
@@ -95,7 +94,6 @@ export default function AddCreditForm({ customerData }: Props) {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(response.result);
       fetchCustomerdata(postdata);
       router.push(`/customer/`);
       return response.result;
@@ -104,7 +102,6 @@ export default function AddCreditForm({ customerData }: Props) {
   }
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
     setSending(true);
     toast.promise(AddCreditToCustomer(data), {
       loading: "sending data ...",

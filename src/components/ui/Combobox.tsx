@@ -62,7 +62,6 @@ type Props = {
 export function Combobox({ list, setCustomer, defultValue }: Props) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(defultValue ? defultValue : "");
-  console.log(value);
   const FW = list.map((c) => {
     return {
       value: c.docId,
@@ -71,12 +70,10 @@ export function Combobox({ list, setCustomer, defultValue }: Props) {
       email: c.email,
     };
   });
-  console.log(FW);
 
   function selectCustomer() {
     const selectedCustomer = list.filter((c) => c.docId === value)[0];
     setCustomer(selectedCustomer);
-    console.log(selectedCustomer);
   }
   const selected = FW.find((framework) => framework.value === value);
 

@@ -20,7 +20,6 @@ type Props = {
   };
 };
 export default function AddCredit({ params }: Props) {
-  console.log(params.customerId);
   const { customer } = useTodo();
 
   const customerData = customer.find(
