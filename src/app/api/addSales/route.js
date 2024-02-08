@@ -12,7 +12,7 @@ export const POST = async (request) => {
         (p) => p.productId === item.productDocId
       )[0];
       if (inv.currentAmount < item.no) {
-        throw new Error();
+        throw new Error("not enough product in the inventory");
       }
     });
 
@@ -73,6 +73,11 @@ export const POST = async (request) => {
       }
     );
   } catch (error) {
-    return new Response("Somthing went wrong", { status: 500 });
+    return new Response(
+      JSON.stringify({
+        ErrorMessage: error.message,
+      }),
+      { status: 500 }
+    );
   }
 };

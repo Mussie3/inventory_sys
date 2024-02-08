@@ -171,7 +171,7 @@ export function ProductDataTable<TData, TValue>({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {["cash", "credit", "mixed", "pose"].map((p, i) => {
+              {["cash", "credit", "mixed", "POS"].map((p, i) => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={i}

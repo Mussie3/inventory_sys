@@ -147,6 +147,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
     let CIncash;
     if (selectedCustomer && paidIn == "cash") {
       CIncash = Total;
+      setCreditAmount(0);
     } else if (selectedCustomer && paidIn == "mixed") {
       CIncash = Total - creditAmount;
     } else if (selectedCustomer && paidIn == "credit") {
@@ -154,6 +155,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       CIncash = 0;
     } else {
       CIncash = 0;
+      setCreditAmount(0);
     }
     setIncash(Number(CIncash.toFixed(2)));
   }, [
@@ -393,7 +395,8 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
         return response.result.edited;
       }
     }
-    throw Error("error");
+    const response = await res.json();
+    throw Error(response.ErrorMessage || "somthing went wrong");
   }
 
   async function onSubmit() {
@@ -583,7 +586,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
               <SelectItem value="cash">Cash</SelectItem>
               <SelectItem value="credit">Credit</SelectItem>
               <SelectItem value="mixed">Mixed</SelectItem>
-              <SelectItem value="pose">pose</SelectItem>
+              <SelectItem value="POS">POS</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -599,7 +602,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
-              <SelectItem value="pose">pose</SelectItem>
+              <SelectItem value="POS">POS</SelectItem>
             </SelectContent>
           </Select>
         </div>

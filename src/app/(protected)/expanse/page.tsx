@@ -20,6 +20,7 @@ import { FiMoreVertical } from "react-icons/fi";
 import { toast } from "sonner";
 import ExCard from "@/components/ui/exCard";
 import CashIncomeCard from "@/components/ui/CashIncomeCard";
+import NetCash from "@/components/ui/NetCash";
 
 type Expanse = {
   docId: string;
@@ -201,6 +202,7 @@ export default function Users() {
       <div className="flex gap-8">
         <ExCard />
         <CashIncomeCard />
+        <NetCash />
       </div>
 
       <div className="w-full">

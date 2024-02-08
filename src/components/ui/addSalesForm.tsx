@@ -108,6 +108,7 @@ export default function AddSalesForm() {
     let CIncash;
     if (selectedCustomer && paidIn == "cash") {
       CIncash = Total;
+      setCreditAmount(0);
     } else if (selectedCustomer && paidIn == "mixed") {
       CIncash = Total - creditAmount;
     } else if (selectedCustomer && paidIn == "credit") {
@@ -115,6 +116,7 @@ export default function AddSalesForm() {
       CIncash = 0;
     } else {
       CIncash = 0;
+      setCreditAmount(0);
     }
     setIncash(Number(CIncash.toFixed(2)));
   }, [selectedCustomer, items, discounted, creditAmount, paidIn, Total]);
@@ -254,7 +256,6 @@ export default function AddSalesForm() {
       method: "POST",
       body: JSON.stringify(senddata),
     });
-
     if (res.ok) {
       const response = await res.json();
       if (response.result.created) {
@@ -265,7 +266,8 @@ export default function AddSalesForm() {
         return response.result.created;
       }
     }
-    throw Error("error");
+    const response = await res.json();
+    throw Error(response.ErrorMessage || "somthing went wrong");
   }
 
   async function onSubmit() {
@@ -454,7 +456,7 @@ export default function AddSalesForm() {
               <SelectItem value="cash">Cash</SelectItem>
               <SelectItem value="credit">Credit</SelectItem>
               <SelectItem value="mixed">Mixed</SelectItem>
-              <SelectItem value="pose">pose</SelectItem>
+              <SelectItem value="POS">POS</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -470,7 +472,7 @@ export default function AddSalesForm() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
-              <SelectItem value="pose">pose</SelectItem>
+              <SelectItem value="POS">POS</SelectItem>
             </SelectContent>
           </Select>
         </div>
