@@ -19,7 +19,7 @@ import {
 import { FiMoreVertical } from "react-icons/fi";
 import { toast } from "sonner";
 import ExCard from "@/components/ui/exCard";
-import CashIncomeCard from "@/components/ui/cashIncomeCard";
+import CashIncomeCard from "@/components/ui/CashIncomeCard";
 
 type Expanse = {
   docId: string;
