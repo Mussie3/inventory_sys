@@ -119,7 +119,7 @@ export default function AddSalesForm() {
       CIncash = 0;
     }
     setIncash(Number(CIncash.toFixed(2)));
-  }, [selectedCustomer, items, discounted, creditAmount, paidIn]);
+  }, [selectedCustomer, items, discounted, creditAmount, paidIn, Total]);
 
   function fetchSalesdata(id: string, senddata: any) {
     // setSalesLoading(true);

@@ -140,7 +140,7 @@ export default function BarChartData({ Labal }: Props) {
         setLoading(undefined);
         console.log(err);
       });
-  }, [filterDate]);
+  }, [filterDate, nowPlusone, path]);
 
   // if (!data) return null;
 

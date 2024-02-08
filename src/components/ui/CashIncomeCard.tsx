@@ -44,7 +44,7 @@ export default function CashIncomeCard() {
           <div className="flex flex-col gap-2">
             <div className="mt-4">
               <div className="flex justify-between items-center gap-2">
-                <h1 className="font-bold text-xl">Today's Total Cash Income</h1>
+                <h1 className="font-bold text-xl">{`Today's Total Cash Income`}</h1>
               </div>
             </div>
             <h2 className="text-2xl">
@@ -57,7 +57,7 @@ export default function CashIncomeCard() {
             <div className="mt-4">
               <div className="flex justify-between items-center gap-2">
                 <h1 className="font-bold text-xl">
-                  This Week's Total Cash Income
+                  {`This Week's Total Cash Income`}
                 </h1>
               </div>
             </div>
@@ -71,7 +71,7 @@ export default function CashIncomeCard() {
             <div className="mt-4">
               <div className="flex justify-between items-center gap-2">
                 <h1 className="font-bold text-xl">
-                  This Month's Total Cash Income
+                  {`This Month's Total Cash Income`}
                 </h1>
               </div>
             </div>

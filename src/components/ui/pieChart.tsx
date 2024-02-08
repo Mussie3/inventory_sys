@@ -106,7 +106,7 @@ export default function PieChartData({ Labal }: Props) {
         setLoading(undefined);
         console.log(err);
       });
-  }, [filterDate]);
+  }, [filterDate, catagory.length, nowPlusone, path]);
 
   // if (!data) return null;
 

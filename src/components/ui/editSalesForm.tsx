@@ -157,7 +157,15 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       CIncash = 0;
     }
     setIncash(Number(CIncash.toFixed(2)));
-  }, [customer, items, creditAmount, discounted, paidIn]);
+  }, [
+    customer,
+    items,
+    creditAmount,
+    discounted,
+    paidIn,
+    Total,
+    selectedCustomer,
+  ]);
 
   console.log(Total);
 

@@ -62,7 +62,7 @@ export default function TopCard({ no, path, timeLabel }: Props) {
         console.log(data);
         setData(data);
       });
-  }, [path, timeLabel]);
+  }, [path, timeLabel, nowPlusone, no]);
 
   if (
     !data ||

@@ -44,7 +44,7 @@ export default function ExCard() {
           <div className="flex flex-col gap-2">
             <div className="mt-4">
               <div className="flex justify-between items-center gap-2">
-                <h1 className="font-bold text-xl">Today's Total Expanse</h1>
+                <h1 className="font-bold text-xl">{`Today's Total Expanse`}</h1>
               </div>
             </div>
             <h2 className="text-2xl">
@@ -56,7 +56,7 @@ export default function ExCard() {
           <div className="flex flex-col gap-2">
             <div className="mt-4">
               <div className="flex justify-between items-center gap-2">
-                <h1 className="font-bold text-xl">This Week's Total Expanse</h1>
+                <h1 className="font-bold text-xl">{`This Week's Total Expanse`}</h1>
               </div>
             </div>
             <h2 className="text-2xl">
@@ -69,7 +69,7 @@ export default function ExCard() {
             <div className="mt-4">
               <div className="flex justify-between items-center gap-2">
                 <h1 className="font-bold text-xl">
-                  This Month's Total Expanse
+                  {`This Month's Total Expanse`}
                 </h1>
               </div>
             </div>
