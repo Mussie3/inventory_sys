@@ -6,6 +6,7 @@ import { HiOutlineClipboardList } from "react-icons/hi";
 import { LiaProductHunt, LiaUserSolid } from "react-icons/lia";
 import { MdOutlineInventory2 } from "react-icons/md";
 import { BsChevronBarLeft, BsChevronBarRight } from "react-icons/bs";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "./button";
@@ -29,11 +30,6 @@ const NavMenu = [
     text: "Customer",
     icon: <FiUsers className="w-6 h-6" />,
   },
-  // {
-  //   href: "/catagory",
-  //   text: "Catagory",
-  //   icon: <FaLayerGroup className="w-6 h-6" />,
-  // },
   {
     href: "/inventory",
     text: "Inventory",
@@ -43,6 +39,11 @@ const NavMenu = [
     href: "/sales",
     text: "Sales",
     icon: <HiOutlineClipboardList className="w-6 h-6" />,
+  },
+  {
+    href: "/expanse",
+    text: "Expanse",
+    icon: <RiMoneyDollarCircleLine className="w-6 h-6" />,
   },
   {
     href: "/users",

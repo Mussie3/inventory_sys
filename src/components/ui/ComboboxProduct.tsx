@@ -22,28 +22,13 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { Input } from "./input";
 
-// const frameworks = [
-//   {
-//     value: "next.js",
-//     label: "Next.js",
-//   },
-//   {
-//     value: "sveltekit",
-//     label: "SvelteKit",
-//   },
-//   {
-//     value: "nuxt.js",
-//     label: "Nuxt.js",
-//   },
-//   {
-//     value: "remix",
-//     label: "Remix",
-//   },
-//   {
-//     value: "astro",
-//     label: "Astro",
-//   },
-// ];
+type Items = {
+  productId: string;
+  productDocId: string;
+  product: Product;
+  no: number;
+  discount_per_unit: number;
+};
 
 type Product = {
   image: string;
@@ -60,15 +45,14 @@ type Product = {
 type Props = {
   list: Product[];
   setItems: any;
-  defultValue?: Product[];
 };
-export function ComboboxProduct({ list, setItems, defultValue }: Props) {
+export function ComboboxProduct({ list, setItems }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(defultValue ? defultValue : []);
+  const [selectedProduct, setSelectedProduct] = React.useState<Product>();
   const [toggleById, setToggleById] = React.useState(false);
   const [pestedProductId, setPestedProductId] = React.useState("");
   const [pestedValue, setPestedValue] = React.useState("");
-  console.log(value);
+
   const FW = list.map((c) => {
     return {
       value: c.docId,
@@ -80,17 +64,36 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
   console.log(FW);
 
   function addproduct() {
-    console.log(value);
-    setItems((pre: any) => {
-      return value.map((v: Product) => {
-        const exist = pre.find((p: any) => p?.productId === v?.docId);
+    if (selectedProduct) {
+      setItems((pre: Items[]) => {
+        const exist = pre.find(
+          (p: any) => p?.productId === selectedProduct?.id
+        );
         if (exist) {
-          return { productId: v.docId, product: exist.product, no: exist.no };
+          //map
+          return pre.map((item) => {
+            if (item.productId == selectedProduct?.id) {
+              return {
+                ...item,
+                no: item.no + 1,
+              };
+            }
+            return item;
+          });
         } else {
-          return { productId: v.docId, product: v, no: 1 };
+          return [
+            ...pre,
+            {
+              productId: selectedProduct.id,
+              productDocId: selectedProduct.docId,
+              product: selectedProduct,
+              no: 1,
+              discount_per_unit: 0,
+            },
+          ];
         }
       });
-    });
+    }
     // setItems()
   }
 
@@ -108,7 +111,7 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
     }, 100);
   }
 
-  function AddProductById2() {
+  function AddProductByIdButton() {
     console.log(pestedProductId);
 
     setPestedValue(pestedProductId);
@@ -118,17 +121,12 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
   React.useEffect(() => {
     console.log(pestedValue);
     if (pestedValue != "") {
-      console.log(value);
       let newItems;
-
-      const exist = value.find((item) => item.id == pestedValue);
-      if (exist) {
-        console.log("g");
-
-        setItems((pre: any) => {
+      setItems((pre: Items[]) => {
+        const exist = pre.find((item) => item.productId == pestedValue);
+        if (exist) {
           return pre.map((item: any) => {
-            if (item.product.id == pestedValue) {
-              console.log("g");
+            if (item.product.id == exist.productId) {
               return {
                 ...item,
                 no: item.no + 1,
@@ -136,36 +134,27 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
             }
             return item;
           });
-        });
-      } else {
-        const product = list.find((item) => item.id == pestedValue);
-        if (product) {
-          const arr: any = value;
-          const found = arr.find((a: any) => a.docId === product.docId);
-          if (!found) {
-            arr.push(product);
-            setValue(arr);
-          }
-          setItems((pre: any) => {
-            return value.map((v: Product) => {
-              const exist = pre.find((p: any) => p?.productId === v?.docId);
-              if (exist) {
-                return {
-                  productId: v.docId,
-                  product: exist.product,
-                  no: exist.no,
-                };
-              } else {
-                return { productId: v.docId, product: v, no: 1 };
-              }
-            });
-          });
         } else {
-          toast.error(`No product with "${pestedValue}" ID`);
+          const product = list.find((item) => item.id == pestedValue);
+          if (product) {
+            return [
+              ...pre,
+              {
+                productId: product.id,
+                productDocId: product.docId,
+                product: product,
+                no: 1,
+                discount_per_unit: 0,
+              },
+            ];
+          } else {
+            toast.error(`No product with "${pestedValue}" ID`);
+            return pre;
+          }
         }
-      }
+      });
     }
-  }, [pestedValue, list, setItems, value]);
+  }, [pestedValue, list, setItems]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -179,10 +168,8 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
                 aria-expanded={open}
                 className="w-96 justify-between"
               >
-                {value.length !== 0
-                  ? list.find((framework) =>
-                      value.find((v: any) => v.docId == framework.docId)
-                    )?.product_name
+                {selectedProduct
+                  ? selectedProduct.product_name
                   : "Select Products..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -197,22 +184,35 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
                     {list.map((framework) => (
                       <CommandItem
                         key={framework.docId}
-                        value={framework.product_name}
+                        // value={framework.product_name}
                         onSelect={() => {
-                          const arr: any = value;
-                          const found = arr.find(
-                            (a: any) => a.docId === framework.docId
-                          );
-                          if (!found) {
-                            //checking weather array contain the id
-                            arr.push(framework); //adding to array because value doesnt exists
-                          } else {
-                            arr.splice(arr.indexOf(framework), 1); //deleting
-                          }
-                          console.log(arr);
-                          // setCatagoryFilter([...arr]);
-                          // console.log(catagoryFilter);
-                          setValue(arr);
+                          // const arr: any = value;
+                          // const found = arr.find(
+                          //   (a: any) => a.docId === framework.docId
+                          // );
+                          // if (!found) {
+                          //   //checking weather array contain the id
+                          //   arr.push(framework); //adding to array because value doesnt exists
+                          // } else {
+                          //   arr.splice(arr.indexOf(framework), 1); //deleting
+                          //   // setItems((pre: any) => {
+                          //   //   return pre.map((item: any) => {
+                          //   //     if (item.product.docId == framework.docId) {
+                          //   //       console.log("g");
+                          //   //       return {
+                          //   //         ...item,
+                          //   //         no: item.no + 1,
+                          //   //       };
+                          //   //     }
+                          //   //     return item;
+                          //   //   });
+                          //   // });
+                          // }
+                          // console.log(arr);
+                          // // setCatagoryFilter([...arr]);
+                          // // console.log(catagoryFilter);
+                          // setValue(arr);
+                          setSelectedProduct(framework);
                           setOpen(false);
                         }}
                       >
@@ -220,26 +220,26 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
                         <Check
                           className={cn(
                             "mr-2 h-8 w-8",
-                            value.find((v: any) => v.docId === framework.docId)
+                            selectedProduct?.id == framework.id
                               ? "opacity-100"
                               : "opacity-0"
                           )}
                         />
                         <div className="flex gap-2 border rounded p-2 w-full mr-4">
-                          <div className="min-w-[50px] w-fit">
+                          <div className="w-[70px] h-[100px] border rounded overflow-hidden">
                             <Image
                               src={framework.image}
                               alt={framework.product_name}
-                              width={50}
+                              width={70}
                               height={100}
                               className="w-full h-full object-cover"
                             />
                           </div>
                           <div className="">
-                            <div className="line-clamp-1 text-lg">
+                            <div className="line-clamp-1">
                               {framework.product_name}
                             </div>
-                            <div className="line-clamp-2">
+                            <div className="line-clamp-2 text-sm">
                               {framework.details}
                             </div>
                           </div>
@@ -273,7 +273,7 @@ export function ComboboxProduct({ list, setItems, defultValue }: Props) {
               className="w-96"
               onPaste={AddProductById}
             />
-            <Button onClick={AddProductById2} className="min-w-fit">
+            <Button onClick={AddProductByIdButton} className="min-w-fit">
               Add Product
             </Button>
             <Button

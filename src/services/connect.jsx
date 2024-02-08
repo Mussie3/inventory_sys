@@ -98,7 +98,7 @@ const services = {
       return data.id;
     } catch (err) {
       console.log(err);
-      return "something went wrong";
+      return undefined;
     }
   },
   AddSales: async (Sales) => {
@@ -134,6 +134,25 @@ const services = {
         { merge: true }
       );
       return data.id;
+    } catch (err) {
+      console.log(err);
+      return undefined;
+    }
+  },
+  AddExpanse: async (expanse) => {
+    const expanseref = collection(db, "Expanse");
+
+    try {
+      const expanseid = await addDoc(expanseref, { ...expanse });
+      const createdref = doc(db, "Expanse", expanseid.id);
+      await setDoc(
+        createdref,
+        {
+          docId: expanseid.id,
+        },
+        { merge: true }
+      );
+      return expanseid.id;
     } catch (err) {
       console.log(err);
       return undefined;
@@ -259,6 +278,22 @@ const services = {
       return undefined;
     }
   },
+  EditExpanse: async (expanse, expanseId) => {
+    const createdref = doc(db, "Expanse", expanseId);
+    try {
+      await setDoc(
+        createdref,
+        {
+          ...expanse,
+        },
+        { merge: true }
+      );
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  },
   EditCatagory: async (id, catagoryName) => {
     const salesref = doc(db, "Catagorys", id);
 
@@ -363,6 +398,16 @@ const services = {
       throw Error;
     }
   },
+  GetAllExapase: async () => {
+    const expanseref = collection(db, "Expanse");
+    try {
+      const data = await getDocs(expanseref, fetchCache);
+      const allexpanse = data.docs.map((doc) => doc.data());
+      return allexpanse;
+    } catch (err) {
+      throw Error;
+    }
+  },
   DeleteCustomer: async (Id) => {
     const customerref = doc(db, "Customers", Id);
     try {
@@ -370,7 +415,7 @@ const services = {
       return true;
     } catch (err) {
       console.log(err);
-      return "something went wrong";
+      return undefined;
     }
   },
   DeleteProduct: async (Id) => {
@@ -381,7 +426,7 @@ const services = {
       return true;
     } catch (err) {
       console.log(err);
-      return "something went wrong";
+      return undefined;
     }
   },
   DeleteInventory: async (Id, productId) => {
@@ -407,6 +452,16 @@ const services = {
     const salesref = doc(db, "Sales", Id);
     try {
       await deleteDoc(salesref);
+      return true;
+    } catch (err) {
+      console.log(err);
+      return undefined;
+    }
+  },
+  DeleteExpanse: async (Id) => {
+    const expanseref = doc(db, "Expanse", Id);
+    try {
+      await deleteDoc(expanseref);
       return true;
     } catch (err) {
       console.log(err);

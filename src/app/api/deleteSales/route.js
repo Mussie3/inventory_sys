@@ -7,7 +7,7 @@ export const POST = async (request) => {
     const sale = await services.GetSalesById(id);
 
     for (let i = 0; i < sale.items.length; i++) {
-      const product = await services.GetProductById(sale.items[i].productId);
+      const product = await services.GetProductById(sale.items[i].productDocId);
       const inv = await services.GetInventoryById(product.invId);
       const num = inv.currentAmount + sale.items[i].no;
       const good = await services.SubInventory(product.invId, num);
@@ -21,7 +21,7 @@ export const POST = async (request) => {
       console.log(cu);
       const history = cu.history.filter((s) => s !== sale.docId);
       console.log(history);
-      if (sale.paidIn == "credit") {
+      if (sale.paidIn == "credit" || sale.paidIn == "mixed") {
         const used = cu.credit.used - sale.totalAmount;
         cuData = {
           history: history,

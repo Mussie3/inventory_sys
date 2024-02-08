@@ -15,7 +15,7 @@ export const POST = async (request) => {
       if (min && !max) {
         return Date.parse(date) >= Date.parse(min);
       } else if (!min && max) {
-        return Date.parse(date) <= Date.parse(end);
+        return Date.parse(date) <= Date.parse(max);
       } else if (min && max) {
         return (
           Date.parse(date) >= Date.parse(min) &&

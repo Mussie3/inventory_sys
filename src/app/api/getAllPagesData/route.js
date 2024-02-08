@@ -1,15 +1,8 @@
 import services from "@/services/connect";
 
 export const GET = async (request) => {
-  console.log("Customers");
+  console.log("getting all data");
   try {
-    // const Products = await services.GetAllProducts();
-    // const Sales = await services.GetAllSeles();
-    // const Customers = await services.GetAllCustomers();
-    // const Inventory = await services.GetAllInventorys();
-    // const Catagorys = await services.GetAllCatagorys();
-    // const Users = await services.GetAllUsers();
-
     const promises = [
       services.GetAllProducts(),
       services.GetAllCustomers(),
@@ -17,24 +10,12 @@ export const GET = async (request) => {
       services.GetAllInventorys(),
       services.GetAllSeles(),
       services.GetAllUsers(),
+      services.GetAllExapase(),
     ];
 
     const AllResults = await Promise.allSettled(promises);
 
     console.log(AllResults);
-
-    // console.log(Customers);
-
-    // if (
-    //   !Products ||
-    //   !Sales ||
-    //   !Customers ||
-    //   !Inventory ||
-    //   !Catagorys ||
-    //   !Users
-    // ) {
-    //   throw Error;
-    // }
 
     return new Response(
       JSON.stringify({

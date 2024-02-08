@@ -20,6 +20,8 @@ import { Checkbox } from "./checkbox";
 import { useTodo } from "@/hooks/useContextData";
 import { toast } from "sonner";
 import { Input } from "./input";
+import EditSaleProductModel from "./EditSaleProductModel";
+import { MdDeleteForever } from "react-icons/md";
 
 type Sales = {
   customer: string;
@@ -32,7 +34,12 @@ type Sales = {
   discounted: boolean;
 };
 
-type ItemsO = { no: number; productId: string };
+type ItemsO = {
+  productId: string;
+  productDocId: string;
+  no: number;
+  discount_per_unit: number;
+};
 
 type Customer = {
   docId: string;
@@ -74,8 +81,10 @@ type Props = {
 
 type Items = {
   productId: string;
+  productDocId: string;
   product: Product;
   no: number;
+  discount_per_unit: number;
 };
 
 export default function EditSalesForm({ customers, product, sale }: Props) {
@@ -101,12 +110,12 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
   const oldItem = sale.items.map((item) => {
     return {
       ...item,
-      product: product.find((p) => p.docId == item.productId),
+      product: product.find((p) => p.docId == item.productDocId),
     };
   }) as Items[];
-  const defaultProducts = sale.items.map((item) =>
-    product.find((p) => p.docId == item.productId)
-  ) as Product[];
+  // const defaultProducts = sale.items.map((item) =>
+  //   product.find((p) => p.docId == item.productId)
+  // ) as Product[];
   const [customer, setCustomers] = useState<Customer | undefined>(
     selectedCustomer
   );
@@ -125,7 +134,11 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
 
   items.forEach(
     (item) =>
-      (SubTotal = SubTotal + Math.floor(item.product.unit_price * item.no))
+      (SubTotal =
+        SubTotal +
+        Math.floor(
+          (item.product.unit_price - item.discount_per_unit) * item.no
+        ))
   );
   const discountAmount =
     customer && discounted ? SubTotal * (customer?.discount / 100) : 0;
@@ -133,13 +146,17 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
 
   useEffect(() => {
     let CIncash;
-    if (customer && paidIn == "credit") {
+    if (selectedCustomer && paidIn == "cash") {
+      CIncash = Total;
+    } else if (selectedCustomer && paidIn == "mixed") {
       CIncash = Total - creditAmount;
+    } else if (selectedCustomer && paidIn == "credit") {
+      setCreditAmount(Total);
+      CIncash = 0;
     } else {
       CIncash = 0;
     }
     setIncash(Number(CIncash.toFixed(2)));
-    console.log("h");
   }, [customer, items, creditAmount, discounted, paidIn]);
 
   console.log(Total);
@@ -166,7 +183,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
           totalAmount: senddata.totalAmount,
           paidIn: senddata.paidIn,
           items: senddata.items,
-          creditAmount: senddata.creditAmount,
+          creditedAmount: senddata.creditAmount,
         };
         return {
           ...S,
@@ -212,7 +229,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
 
     const newInventory = inventory.map((Inv: Inventory) => {
       const soldItem = Items.find(
-        (item: any) => Inv.productId == item.productId
+        (item: any) => Inv.productId == item.productDocId
       );
       if (soldItem) {
         return {
@@ -231,7 +248,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       if (senddata.customer !== sale.customer) {
         if (senddata.customer !== "XXXX" && senddata.customer == Cu.docId) {
           let cuData;
-          if (senddata.paidIn == "credit") {
+          if (senddata.paidIn == "credit" || senddata.paidIn == "mixed") {
             const used = Cu.credit.used + creditAmount;
             cuData = {
               history: [...Cu.history, sale.docId],
@@ -248,7 +265,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
           const editedCustomerhistort = Cu.history;
 
           let cuData;
-          if (sale.paidIn == "credit") {
+          if (sale.paidIn == "credit" || senddata.paidIn == "mixed") {
             const used = Cu.credit.used - sale.creditedAmount;
             cuData = {
               history: editedCustomerhistort.filter(
@@ -272,17 +289,28 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       ) {
         if (senddata.customer == Cu.docId) {
           let cuData;
-          if (sale.paidIn == "credit" && paidIn == "credit") {
+          if (
+            (sale.paidIn == "credit" || sale.paidIn == "mixed") &&
+            (paidIn == "credit" || paidIn == "mixed")
+          ) {
             const used = Cu.credit.used + (creditAmount - sale.creditedAmount);
             cuData = {
               credit: { ...Cu.credit, used: used },
             };
-          } else if (sale.paidIn == "credit" && paidIn != "credit") {
+          } else if (
+            (sale.paidIn == "credit" || sale.paidIn == "mixed") &&
+            paidIn != "credit" &&
+            paidIn != "mixed"
+          ) {
             const used = Cu.credit.used - sale.creditedAmount;
             cuData = {
               credit: { ...Cu.credit, used: used },
             };
-          } else if (sale.paidIn != "credit" && paidIn == "credit") {
+          } else if (
+            sale.paidIn != "credit" &&
+            sale.paidIn != "mixed" &&
+            (paidIn == "credit" || paidIn == "mixed")
+          ) {
             const used = Cu.credit.used + creditAmount;
             cuData = {
               credit: { ...Cu.credit, used: used },
@@ -332,7 +360,12 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
     const senddata = {
       customer: customer?.docId ? customer?.docId : "XXXX",
       items: items.map((item) => {
-        return { productId: item.productId, no: item.no };
+        return {
+          productId: item.productId,
+          productDocId: item.productDocId,
+          no: item.no,
+          discount_per_unit: item.discount_per_unit,
+        };
       }),
       totalAmount: Total,
       paidIn: paidIn,
@@ -376,28 +409,12 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
     });
   }
 
-  function subtruct(id: string) {
-    const newItems = items.map((item) => {
-      if (item.productId == id) {
-        return { ...item, no: item.no - 1 };
-      }
-      return item;
-    });
-    const deletezero = newItems.filter((item) => item.no != 0);
+  function deleteItems(id: string) {
+    const filteredItem = items.filter((item) => item.productId != id);
 
-    setItems(deletezero);
+    setItems(filteredItem);
   }
 
-  function add(id: string) {
-    setItems((pre) => {
-      return pre.map((item) => {
-        if (item.productId == id) {
-          return { ...item, no: item.no + 1 };
-        }
-        return item;
-      });
-    });
-  }
   return (
     <div className="w-full max-w-3xl m-4 flex flex-col gap-4 p-8 border rounded-md ">
       <div className="text-xl mb-8">Add a Sales</div>
@@ -411,11 +428,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       </div>
       <div className="">
         <div className="mb-2 ">Product:</div>
-        <ComboboxProduct
-          list={product}
-          setItems={setItems}
-          defultValue={defaultProducts}
-        />
+        <ComboboxProduct list={product} setItems={setItems} />
       </div>
 
       <div className="mt-8">
@@ -473,29 +486,54 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
               <Card key={item.productId} className="w-full max-w-xl">
                 <CardContent className="p-4">
                   <div className="flex gap-4">
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.product_name}
-                      width={100}
-                      height={300}
-                    />
+                    <div className="w-[120px] h-[140px] border rounded overflow-hidden">
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.product_name}
+                        width={100}
+                        height={300}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
                     <div className="flex flex-col gap-2 w-full">
-                      <h1>{item.product.product_name}</h1>
-                      <div className="line-clamp-1">{item.product.details}</div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                          <div
-                            className="flex items-center justify-center border cursor-pointer border-green-300 rounded w-8 h-8"
-                            onClick={() => subtruct(item.productId)}
-                          >
-                            -
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="flex flex-col gap-1">
+                          <h1 className="text-lg font-bold">
+                            {item.product.product_name}
+                          </h1>
+                          <div className="line-clamp-1">
+                            {item.product.details}
                           </div>
-                          <span>{item.no}</span>
-                          <div
-                            className="flex items-center justify-center border cursor-pointer border-green-300 rounded w-8 h-8"
-                            onClick={() => add(item.productId)}
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <EditSaleProductModel
+                            product={item}
+                            items={items}
+                            setItems={setItems}
+                          />
+                          <button
+                            className="border border-transparent hover:border-red-300 rounded p-1"
+                            onClick={() => {
+                              deleteItems(item.productId);
+                            }}
                           >
-                            +
+                            <MdDeleteForever color={`red`} size={24} />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-end h-full">
+                        <div className="flex flex-col h-full">
+                          <div className="text-sm">
+                            Discount per Unit: {item.discount_per_unit} birr
+                          </div>
+                          <div className="text-sm">
+                            Total Discount: {item.discount_per_unit * item.no}{" "}
+                            birr
+                          </div>
+                          <div className="text-sm">
+                            Number of Products: {item.no}
                           </div>
                         </div>
                         <div className="">
@@ -516,14 +554,19 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
         )}
       </div>
 
-      <div className="flex items-center gap-4 mb-2">
-        <Checkbox
-          id="Discount"
-          checked={discounted}
-          onCheckedChange={() => setDiscounted((pre) => !pre)}
-        />
-        <label htmlFor="Discount">Applay discount</label>
-      </div>
+      {selectedCustomer ? (
+        <div className="flex items-center gap-4 mb-2">
+          <Checkbox
+            id="Discount"
+            checked={discounted}
+            onCheckedChange={() => setDiscounted((pre) => !pre)}
+          />
+          <label htmlFor="Discount">
+            Apply discount {`(${selectedCustomer.discount}%)`}
+          </label>
+        </div>
+      ) : null}
+
       {customer?.credit.allowed ? (
         <div className="flex items-center gap-4">
           <span>PaidIn:</span>
@@ -537,6 +580,8 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
               <SelectItem value="credit">Credit</SelectItem>
+              <SelectItem value="mixed">Mixed</SelectItem>
+              <SelectItem value="pose">pose</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -552,11 +597,12 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
+              <SelectItem value="pose">pose</SelectItem>
             </SelectContent>
           </Select>
         </div>
       )}
-      {paidIn == "credit" && (
+      {paidIn == "mixed" && (
         <Input
           id="creditAmount"
           type="number"
@@ -569,7 +615,7 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
       )}
 
       {Total != 0 && <div>Total: {Total.toLocaleString("en-US")} ETB</div>}
-      {customer &&
+      {/* {customer &&
         (Incash > 0 ? (
           <div className="">
             <div className="">
@@ -581,7 +627,21 @@ export default function EditSalesForm({ customers, product, sale }: Props) {
           <div className="text-red-400">
             Can not Credit Above the current Total Price
           </div>
-        ))}
+        ))} */}
+
+      {Incash > 0 && (
+        <div className="">
+          <div className="">
+            InCredit: {creditAmount.toLocaleString("en-US")} ETB
+          </div>
+          <div className="">InCash: {Incash.toLocaleString("en-US")} ETB</div>
+        </div>
+      )}
+      {paidIn == "mixed" && creditAmount > Total && (
+        <div className="text-red-400">
+          Can not Credit Above the current Total Price
+        </div>
+      )}
 
       <div className="flex justify-end">
         <Button disabled={sending} onClick={onSubmit}>

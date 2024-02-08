@@ -20,8 +20,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 type Items = {
-  no: number;
   productId: string;
+  productDocId: string;
+  no: number;
+  discount_per_unit: number;
 };
 
 type Sales = {
@@ -101,7 +103,7 @@ export default function Sales() {
     const productD = products.filter(
       (p: Product) => {
         return s.items.find((item) => {
-          return p.docId === item.productId;
+          return p.docId === item.productDocId;
         });
       }
       // p.docId === s.items[0].productId || p.docId === s.items[1].productId
@@ -223,15 +225,31 @@ export default function Sales() {
       accessorKey: "paidIn",
       cell: ({ row }) => {
         const paidIn = row.getValue("paidIn");
-        return paidIn == "credit" ? (
-          <div className="flex items-center justify-center bg-yellow-400 font-bold rounded rouned text-yellow-900">
-            <div className="">Credit</div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center bg-green-400 font-bold rounded text-green-900">
-            <div className="">Cash</div>
-          </div>
-        );
+        if (paidIn == "credit") {
+          return (
+            <div className="flex items-center justify-center bg-yellow-400 font-bold rounded rouned text-yellow-900 w-[70px]">
+              <div className="">Credit</div>
+            </div>
+          );
+        } else if (paidIn == "cash") {
+          return (
+            <div className="flex items-center justify-center bg-green-400 font-bold rounded text-green-900 w-[70px]">
+              <div className="">Cash</div>
+            </div>
+          );
+        } else if (paidIn == "mixed") {
+          return (
+            <div className="flex items-center justify-center bg-orange-400 font-bold rounded text-green-900 w-[70px]">
+              <div className="">Mixed</div>
+            </div>
+          );
+        } else {
+          return (
+            <div className="flex items-center justify-center bg-blue-400 font-bold rounded text-green-900 w-[70px]">
+              <div className="">pose</div>
+            </div>
+          );
+        }
       },
       enableColumnFilter: true,
       filterFn: (row, columnId, filterStatuses) => {

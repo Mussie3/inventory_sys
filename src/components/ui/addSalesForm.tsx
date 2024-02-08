@@ -20,6 +20,8 @@ import { Checkbox } from "./checkbox";
 import { useTodo } from "@/hooks/useContextData";
 import { toast } from "sonner";
 import { Input } from "./input";
+import EditSaleProductModel from "./EditSaleProductModel";
+import { MdDeleteForever } from "react-icons/md";
 
 type Customer = {
   docId: string;
@@ -55,8 +57,10 @@ type Product = {
 
 type Items = {
   productId: string;
+  productDocId: string;
   product: Product;
   no: number;
+  discount_per_unit: number;
 };
 
 export default function AddSalesForm() {
@@ -90,7 +94,11 @@ export default function AddSalesForm() {
 
   items.forEach(
     (item) =>
-      (SubTotal = SubTotal + Math.floor(item.product.unit_price * item.no))
+      (SubTotal =
+        SubTotal +
+        Math.floor(
+          (item.product.unit_price - item.discount_per_unit) * item.no
+        ))
   );
   const discountAmount =
     selectedCustomer && discounted
@@ -100,13 +108,17 @@ export default function AddSalesForm() {
 
   useEffect(() => {
     let CIncash;
-    if (selectedCustomer && paidIn == "credit") {
+    if (selectedCustomer && paidIn == "cash") {
+      CIncash = Total;
+    } else if (selectedCustomer && paidIn == "mixed") {
       CIncash = Total - creditAmount;
+    } else if (selectedCustomer && paidIn == "credit") {
+      setCreditAmount(Total);
+      CIncash = 0;
     } else {
       CIncash = 0;
     }
     setIncash(Number(CIncash.toFixed(2)));
-    console.log("h");
   }, [selectedCustomer, items, discounted, creditAmount, paidIn]);
 
   function fetchSalesdata(id: string, senddata: any) {
@@ -126,7 +138,12 @@ export default function AddSalesForm() {
       ...sales,
       {
         docId: id,
-        ...senddata,
+        customer: senddata.customer,
+        items: senddata.items,
+        totalAmount: senddata.totalAmount,
+        discounted: senddata.discounted,
+        paidIn: senddata.paidIn,
+        creditedAmount: senddata.creditAmount,
         datetime: new Date().toISOString(),
       },
     ];
@@ -148,7 +165,7 @@ export default function AddSalesForm() {
     //   });
     const newInventory = inventory.map((Inv: Inventory) => {
       const soldItem = senddata.items.find(
-        (item: any) => Inv.productId == item.productId
+        (item: any) => Inv.productId == item.productDocId
       );
       if (soldItem) {
         return {
@@ -197,17 +214,17 @@ export default function AddSalesForm() {
       throw Error(`you haven't selected products`);
     }
 
-    if (paidIn == "credit" && creditAmount == 0) {
-      throw Error(`credit amount is 0 then change Paid-In in cash`);
+    if (paidIn == "mixed" && creditAmount == 0) {
+      throw Error(`If credit amount is 0 then change Paid-In in cash`);
     }
 
-    if (paidIn == "credit" && creditAmount > Total) {
-      throw Error(` Can not Credit Above the current Total Price`);
+    if (paidIn == "mixed" && creditAmount > Total) {
+      throw Error(`Can not Credit Above the current Total Price`);
     }
 
     if (
       selectedCustomer &&
-      paidIn === "credit" &&
+      (paidIn === "credit" || paidIn === "mixed") &&
       selectedCustomer.credit.max != 0
     ) {
       const left = selectedCustomer.credit.max - selectedCustomer.credit.used;
@@ -222,7 +239,12 @@ export default function AddSalesForm() {
     const senddata = {
       customer: selectedCustomer?.docId ? selectedCustomer?.docId : "XXXX",
       items: items.map((item) => {
-        return { productId: item.productId, no: item.no };
+        return {
+          productId: item.productId,
+          productDocId: item.productDocId,
+          no: item.no,
+          discount_per_unit: item.discount_per_unit,
+        };
       }),
       totalAmount: Total,
       discounted: discounted,
@@ -265,27 +287,10 @@ export default function AddSalesForm() {
     });
   }
 
-  function subtruct(id: string) {
-    const newItems = items.map((item) => {
-      if (item.productId == id) {
-        return { ...item, no: item.no - 1 };
-      }
-      return item;
-    });
-    const deletezero = newItems.filter((item) => item.no != 0);
+  function deleteItems(id: string) {
+    const filteredItem = items.filter((item) => item.productId != id);
 
-    setItems(deletezero);
-  }
-
-  function add(id: string) {
-    setItems((pre) => {
-      return pre.map((item) => {
-        if (item.productId == id) {
-          return { ...item, no: item.no + 1 };
-        }
-        return item;
-      });
-    });
+    setItems(filteredItem);
   }
 
   return (
@@ -357,29 +362,54 @@ export default function AddSalesForm() {
               <Card key={item.productId} className="w-full max-w-xl">
                 <CardContent className="p-4">
                   <div className="flex gap-4">
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.product_name}
-                      width={100}
-                      height={300}
-                    />
+                    <div className="w-[120px] h-[140px] border rounded overflow-hidden">
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.product_name}
+                        width={100}
+                        height={300}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
                     <div className="flex flex-col gap-2 w-full">
-                      <h1>{item.product.product_name}</h1>
-                      <div className="line-clamp-1">{item.product.details}</div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                          <div
-                            className="flex items-center justify-center border cursor-pointer border-green-300 rounded w-8 h-8"
-                            onClick={() => subtruct(item.productId)}
-                          >
-                            -
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="flex flex-col gap-1">
+                          <h1 className="text-lg font-bold">
+                            {item.product.product_name}
+                          </h1>
+                          <div className="line-clamp-1">
+                            {item.product.details}
                           </div>
-                          <span>{item.no}</span>
-                          <div
-                            className="flex items-center justify-center border cursor-pointer border-green-300 rounded w-8 h-8"
-                            onClick={() => add(item.productId)}
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <EditSaleProductModel
+                            product={item}
+                            items={items}
+                            setItems={setItems}
+                          />
+                          <button
+                            className="border border-transparent hover:border-red-300 rounded p-1"
+                            onClick={() => {
+                              deleteItems(item.productId);
+                            }}
                           >
-                            +
+                            <MdDeleteForever color={`red`} size={24} />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-end h-full">
+                        <div className="flex flex-col h-full">
+                          <div className="text-sm">
+                            Discount per Unit: {item.discount_per_unit} birr
+                          </div>
+                          <div className="text-sm">
+                            Total Discount: {item.discount_per_unit * item.no}{" "}
+                            birr
+                          </div>
+                          <div className="text-sm">
+                            Number of Products: {item.no}
                           </div>
                         </div>
                         <div className="">
@@ -395,19 +425,24 @@ export default function AddSalesForm() {
         ) : (
           <div className="text-gray-400">No products have been selected</div>
         )}
+        {}
         {SubTotal != 0 && (
           <div>SubTotal: {SubTotal.toLocaleString("en-US")} ETB</div>
         )}
       </div>
 
-      <div className="flex items-center gap-4 mb-2">
-        <Checkbox
-          id="Discount"
-          checked={discounted}
-          onCheckedChange={() => setDiscounted((pre) => !pre)}
-        />
-        <label htmlFor="Discount">Applay discount</label>
-      </div>
+      {selectedCustomer ? (
+        <div className="flex items-center gap-4 mb-2">
+          <Checkbox
+            id="Discount"
+            checked={discounted}
+            onCheckedChange={() => setDiscounted((pre) => !pre)}
+          />
+          <label htmlFor="Discount">
+            Apply discount {`(${selectedCustomer.discount}%)`}
+          </label>
+        </div>
+      ) : null}
 
       {selectedCustomer?.credit.allowed ? (
         <div className="flex items-center gap-4">
@@ -422,6 +457,8 @@ export default function AddSalesForm() {
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
               <SelectItem value="credit">Credit</SelectItem>
+              <SelectItem value="mixed">Mixed</SelectItem>
+              <SelectItem value="pose">pose</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -437,21 +474,26 @@ export default function AddSalesForm() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
+              <SelectItem value="pose">pose</SelectItem>
             </SelectContent>
           </Select>
         </div>
       )}
 
-      {paidIn == "credit" && (
-        <Input
-          id="creditAmount"
-          type="number"
-          placeholder="Credit Amount"
-          required
-          max={Total}
-          value={creditAmount}
-          onChange={(e) => setCreditAmount(Number(e.target.value))}
-        />
+      {paidIn == "mixed" && (
+        <div className="flex gap-2 items-center">
+          <div>Credit : </div>
+          <Input
+            id="creditAmount"
+            type="number"
+            placeholder="Credit Amount"
+            className="w-52"
+            required
+            max={Total}
+            value={creditAmount}
+            onChange={(e) => setCreditAmount(Number(e.target.value))}
+          />
+        </div>
       )}
 
       {Total != 0 && <div>Total: {Total.toLocaleString("en-US")} ETB</div>}
@@ -463,7 +505,7 @@ export default function AddSalesForm() {
           <div className="">InCash: {Incash.toLocaleString("en-US")} ETB</div>
         </div>
       )}
-      {paidIn == "credit" && creditAmount > Total && (
+      {paidIn == "mixed" && creditAmount > Total && (
         <div className="text-red-400">
           Can not Credit Above the current Total Price
         </div>

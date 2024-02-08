@@ -56,7 +56,9 @@ export const POST = async (request) => {
     console.log(arr);
 
     arr.forEach((item) => {
-      const inv = Allinventory.filter((p) => p.productId === item.productId)[0];
+      const inv = Allinventory.filter(
+        (p) => p.productId === item.productDocId
+      )[0];
       if (inv.currentAmount < item.no) {
         throw new Error();
       }
@@ -69,7 +71,7 @@ export const POST = async (request) => {
       if (customer !== "XXXX") {
         const newcustomer = await services.GetCustomerById(customer);
         let cuData;
-        if (paidIn == "credit") {
+        if (paidIn == "credit" || paidIn == "mixed") {
           const used = newcustomer.credit.used + creditAmount;
           cuData = {
             history: [...newcustomer.history, created],
@@ -92,7 +94,7 @@ export const POST = async (request) => {
         console.log(oldcustomerHistory);
 
         let cuData;
-        if (oldSales.paidIn == "credit") {
+        if (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") {
           const used = oldcustomer.credit.used - oldSales.creditedAmount;
           cuData = {
             history: oldcustomerHistory,
@@ -113,18 +115,29 @@ export const POST = async (request) => {
       if (oldSales.creditedAmount != creditAmount) {
         const thecustomer = await services.GetCustomerById(customer);
         let cuData;
-        if (oldSales.paidIn == "credit" && paidIn == "credit") {
+        if (
+          (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") &&
+          (paidIn == "credit" || paidIn == "mixed")
+        ) {
           const used =
             thecustomer.credit.used + (creditAmount - oldSales.creditedAmount);
           cuData = {
             credit: { ...thecustomer.credit, used: used },
           };
-        } else if (oldSales.paidIn == "credit" && paidIn != "credit") {
+        } else if (
+          (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") &&
+          paidIn != "credit" &&
+          paidIn != "mixed"
+        ) {
           const used = thecustomer.credit.used - oldSales.creditedAmount;
           cuData = {
             credit: { ...thecustomer.credit, used: used },
           };
-        } else if (oldSales.paidIn != "credit" && paidIn == "credit") {
+        } else if (
+          oldSales.paidIn != "credit" &&
+          oldSales.paidIn != "mixed" &&
+          (paidIn == "credit" || paidIn == "mixed")
+        ) {
           const used = thecustomer.credit.used + creditAmount;
           cuData = {
             credit: { ...thecustomer.credit, used: used },
@@ -143,13 +156,13 @@ export const POST = async (request) => {
     for (let i = 0; i < arr.length; i++) {
       console.log(arr[i]);
       const inv = Allinventory.filter(
-        (p) => p.productId === arr[i].productId
+        (p) => p.productId === arr[i].productDocId
       )[0];
       const currentAmount = inv.currentAmount - arr[i].no;
       console.log(inv.docId);
       console.log(currentAmount);
       const good = await services.SubInventory(inv.docId, currentAmount);
-      if (!good) err.push(arr[i].productId);
+      if (!good) err.push(arr[i].productDocId);
     }
 
     const newSales = {
@@ -158,7 +171,7 @@ export const POST = async (request) => {
       totalAmount: totalAmount,
       paidIn: paidIn,
       items: items,
-      creditAmount: creditAmount,
+      creditedAmount: creditAmount,
     };
 
     const edited = services.EditSales(salesId, newSales);

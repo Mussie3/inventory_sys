@@ -42,7 +42,7 @@ export const POST = async (request) => {
     filteredSales.forEach((sale) => {
       const items = sale.items;
       items.forEach((item) => {
-        const id = item.productId;
+        const id = item.productDocId;
         const no = productObject[id] ? productObject[id].no + item.no : item.no;
         productObject[id] = {
           productId: id,

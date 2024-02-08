@@ -20,6 +20,8 @@ export function DataProvider({ children }) {
   const [salesLoading, setSalesLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(true);
+  const [expanse, setExpanse] = useState([]);
+  const [expanseLoading, setExpanseLoading] = useState(true);
 
   function fetchAllPagedata() {
     console.log("ff");
@@ -29,6 +31,7 @@ export function DataProvider({ children }) {
     setInventoryLoading(true);
     setSalesLoading(true);
     setUsersLoading(true);
+    setExpanseLoading(true);
     fetch("/api/getAllPagesData", {
       cache: "no-store",
     })
@@ -72,6 +75,12 @@ export function DataProvider({ children }) {
         } else {
           setUsersLoading(undefined);
         }
+        if (data[6].status == "fulfilled") {
+          setExpanse(data[6].value);
+          setExpanseLoading(false);
+        } else {
+          setExpanseLoading(undefined);
+        }
       })
       .catch((err) => {
         setProductsLoading(undefined);
@@ -80,6 +89,7 @@ export function DataProvider({ children }) {
         setInventoryLoading(undefined);
         setSalesLoading(undefined);
         setUsersLoading(undefined);
+        setExpanseLoading(undefined);
         console.log(err);
       });
   }
@@ -116,6 +126,10 @@ export function DataProvider({ children }) {
         setUsers,
         usersLoading,
         setUsersLoading,
+        expanse,
+        setExpanse,
+        expanseLoading,
+        setExpanseLoading,
         fetchAllPagedata,
       }}
     >

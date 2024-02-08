@@ -4,24 +4,28 @@ export const POST = async (request) => {
   const { paidIn, discounted, customer, totalAmount, items, creditAmount } =
     await request.json();
 
-  console.log(items);
+  console.log(paidIn, discounted, customer, totalAmount, items, creditAmount);
 
   try {
     const Allinventory = await services.GetAllInventorys();
 
+    console.log(Allinventory);
     items.forEach((item) => {
-      const inv = Allinventory.filter((p) => p.productId === item.productId)[0];
+      const inv = Allinventory.filter(
+        (p) => p.productId === item.productDocId
+      )[0];
       if (inv.currentAmount < item.no) {
         throw new Error();
       }
     });
 
     let err = [];
+    console.log(err);
 
     for (let i = 0; i < items.length; i++) {
       console.log(items[i]);
       const inv = Allinventory.filter(
-        (p) => p.productId === items[i].productId
+        (p) => p.productId === items[i].productDocId
       )[0];
       const currentAmount = inv.currentAmount - items[i].no;
       console.log(inv.docId);
@@ -49,7 +53,7 @@ export const POST = async (request) => {
       let cuData;
       const history = cu.history;
       console.log(history);
-      if (paidIn == "credit") {
+      if (paidIn == "credit" || paidIn == "mixed") {
         const used = cu.credit.used + creditAmount;
         cuData = {
           history: [...history, created],
@@ -68,7 +72,7 @@ export const POST = async (request) => {
       JSON.stringify({
         result: {
           faildInv: err.length !== 0 ? false : err,
-          created: created ? true : false,
+          created: created,
           addedToCustomer: addedToCustomer ? true : false,
         },
       }),
@@ -78,6 +82,6 @@ export const POST = async (request) => {
     );
   } catch (error) {
     console.log(error);
-    return new Response("Failed to create a new prompt", { status: 500 });
+    return new Response("Somthing went wrong", { status: 500 });
   }
 };

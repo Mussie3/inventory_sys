@@ -42,13 +42,13 @@ export const POST = async (request) => {
     filteredSales.forEach((sale) => {
       const items = sale.items;
       items.forEach((item) => {
-        const id = productD[item.productId].catagory;
+        const id = productD[item.productDocId].catagory;
         const no = catagoryObject[id]
           ? catagoryObject[id].no + item.no
           : item.no;
         const price = catagoryObject[id]
-          ? catagoryObject[id].no + item.no * productD[item.productId].price
-          : item.no * productD[item.productId].price;
+          ? catagoryObject[id].no + item.no * productD[item.productDocId].price
+          : item.no * productD[item.productDocId].price;
         catagoryObject[id] = {
           catagory: id,
           no: no,
