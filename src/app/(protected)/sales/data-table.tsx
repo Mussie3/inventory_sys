@@ -171,7 +171,7 @@ export function ProductDataTable<TData, TValue>({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {["cash", "credit", "mixed", "POS"].map((p, i) => {
+              {["cash", "credit", "POS", "mixed", "transfer"].map((p, i) => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={i}
@@ -192,12 +192,14 @@ export function ProductDataTable<TData, TValue>({
                     <div
                       className={`flex items-center justify-center font-bold rounded rouned w-full px-2 ${
                         p == "cash"
-                          ? "bg-green-400  text-green-900"
+                          ? "bg-green-400  text-green-50"
                           : p == "credit"
-                          ? "bg-yellow-400  text-yellow-900"
+                          ? "bg-red-400  text-red-50"
+                          : p == "POS"
+                          ? "bg-blue-400  text-blue-50"
                           : p == "mixed"
-                          ? "bg-orange-400  text-orange-900"
-                          : "bg-blue-400  text-blue-900"
+                          ? "bg-orange-400  text-orange-50"
+                          : "bg-violet-400  text-violet-50"
                       }`}
                     >
                       <div className="">{p}</div>

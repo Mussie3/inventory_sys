@@ -457,6 +457,7 @@ export default function AddSalesForm() {
               <SelectItem value="credit">Credit</SelectItem>
               <SelectItem value="mixed">Mixed</SelectItem>
               <SelectItem value="POS">POS</SelectItem>
+              <SelectItem value="transfer">Transfer</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -473,6 +474,7 @@ export default function AddSalesForm() {
             <SelectContent>
               <SelectItem value="cash">Cash</SelectItem>
               <SelectItem value="POS">POS</SelectItem>
+              <SelectItem value="transfer">Transfer</SelectItem>
             </SelectContent>
           </Select>
         </div>

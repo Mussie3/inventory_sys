@@ -2,7 +2,6 @@
 import { ProductDataTable } from "./data-table";
 import TotalCard from "@/components/ui/totalCard";
 import { useTodo } from "@/hooks/useContextData";
-import { useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -226,26 +225,32 @@ export default function Sales() {
         const paidIn = row.getValue("paidIn");
         if (paidIn == "credit") {
           return (
-            <div className="flex items-center justify-center bg-yellow-400 font-bold rounded rouned text-yellow-900 w-[70px]">
+            <div className="flex items-center justify-center bg-red-400 font-bold rounded rouned text-red-50 w-[70px]">
               <div className="">Credit</div>
             </div>
           );
         } else if (paidIn == "cash") {
           return (
-            <div className="flex items-center justify-center bg-green-400 font-bold rounded text-green-900 w-[70px]">
+            <div className="flex items-center justify-center bg-green-400 font-bold rounded text-green-50 w-[70px]">
               <div className="">Cash</div>
             </div>
           );
         } else if (paidIn == "mixed") {
           return (
-            <div className="flex items-center justify-center bg-orange-400 font-bold rounded text-green-900 w-[70px]">
+            <div className="flex items-center justify-center bg-orange-400 font-bold rounded text-orange-50 w-[70px]">
               <div className="">Mixed</div>
+            </div>
+          );
+        } else if (paidIn == "transfer") {
+          return (
+            <div className="flex items-center justify-center bg-violet-400 font-bold rounded text-violet-50 w-[70px]">
+              <div className="">Transfer</div>
             </div>
           );
         } else {
           return (
-            <div className="flex items-center justify-center bg-blue-400 font-bold rounded text-green-900 w-[70px]">
-              <div className="">pose</div>
+            <div className="flex items-center justify-center bg-blue-400 font-bold rounded text-blue-50 w-[70px]">
+              <div className="">POS</div>
             </div>
           );
         }
