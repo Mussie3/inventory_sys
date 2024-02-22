@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
@@ -54,12 +54,30 @@ const NavMenu = [
 
 type Props = {
   Admin: boolean;
-  session: any;
+  session: { user: sessionUser };
+};
+type sessionUser = {
+  name: string;
+  email: string;
+  picture: string;
+  sub: string;
+  iat: number;
+  exp: number;
+  jti: string;
 };
 
 export default function SideNavbar({ Admin, session }: Props) {
+  const [sessionUser, setSessionUser] = useState<sessionUser>(session.user);
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
+
+  useEffect(() => {
+    if (session.user) {
+      setSessionUser(session.user);
+    }
+  }, [session]);
+
+  if (!sessionUser) return;
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
@@ -110,15 +128,15 @@ export default function SideNavbar({ Admin, session }: Props) {
         })}
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
-        <Link href={`users/editUsers/${session?.user.sub}`}>
+        <Link href={`users/editUsers/${sessionUser.sub}`}>
           <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={session?.user.picture as string}
-                alt={session?.user.name}
+                src={sessionUser.picture as string}
+                alt={sessionUser.name}
               />
               <AvatarFallback>
-                {session?.user.name.slice(0, 2).toLocaleUpperCase()}
+                {sessionUser.name.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -130,9 +148,9 @@ export default function SideNavbar({ Admin, session }: Props) {
         >
           <div className="leading-4">
             <h4 className="font-semibold">
-              {session?.user.name.toLocaleUpperCase()}
+              {sessionUser.name.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{session?.user.email}</span>
+            <span className="text-xs text-gray-400">{sessionUser.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />

@@ -318,7 +318,7 @@ const services = {
   GetAllUsers: async () => {
     const usersref = collection(db, "Users");
     try {
-      const data = await getDocs(usersref, fetchCache);
+      const data = await getDocs(usersref);
       const allusers = data.docs.map((doc) => doc.data());
       return allusers;
     } catch (err) {

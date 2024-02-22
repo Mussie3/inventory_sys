@@ -15,4 +15,7 @@ declare module "next-auth" {
       jti: string;
     };
   }
+  interface User extends User {
+    role: string;
+  }
 }

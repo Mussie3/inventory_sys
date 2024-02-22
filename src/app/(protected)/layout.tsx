@@ -10,12 +10,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(options);
+  console.log(session);
+  if (!session) return;
+
   return (
     <div className="flex w-full">
       <SideNavbar Admin={session?.user?.role === "admin"} session={session} />
       <div className="min-h-screen w-full">
         <div className="sticky top-0 z-50">
-          <Navbar />
+          <Navbar session={session} />
         </div>
         <DataProvider>
           <div className="w-full z-40">{children}</div>

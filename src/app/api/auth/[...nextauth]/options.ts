@@ -25,6 +25,7 @@ export const options: NextAuthOptions = {
         // Docs: https://next-auth.js.org/configuration/providers/credentials
 
         const allUser = await services.GetAllUsers();
+
         if (!allUser) return null;
         const filterdUsers = allUser.filter(
           (Users) => Users.role == "admin" || Users.role == "manager"
@@ -60,9 +61,14 @@ export const options: NextAuthOptions = {
     async jwt({ token, user }) {
       // console.log(token, user);
       // return { ...token, ...user };
+      if (user) {
+        token.role = user.role;
+      }
+
       return token;
     },
     async session({ session, token, user }) {
+      // console.log(token, user);
       session.user = token as any;
       return session;
     },
