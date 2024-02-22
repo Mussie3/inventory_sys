@@ -58,11 +58,12 @@ export const options: NextAuthOptions = {
   callbacks: {
     // Ref: https://authjs.dev/guides/basics/role-based-access-control#persisting-the-role
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      // console.log(token, user);
+      // return { ...token, ...user };
+      return token;
     },
     async session({ session, token, user }) {
       session.user = token as any;
-
       return session;
     },
   },
