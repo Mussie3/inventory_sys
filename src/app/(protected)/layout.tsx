@@ -11,7 +11,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(options);
-  if (!session) return;
+  // if (!session) return;
 
   return (
     <>
