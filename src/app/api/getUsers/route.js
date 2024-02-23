@@ -1,6 +1,6 @@
 import services from "@/services/connect";
 
-export const GET = async (request) => {
+export const POST = async (request) => {
   try {
     const Users = await services.GetAllUsers();
 

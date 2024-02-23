@@ -13,6 +13,7 @@ import { Button } from "./button";
 import { FiMoreVertical, FiUsers } from "react-icons/fi";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const NavMenu = [
   {
@@ -52,32 +53,10 @@ const NavMenu = [
   },
 ];
 
-type Props = {
-  Admin: boolean;
-  session: { user: sessionUser };
-};
-type sessionUser = {
-  name: string;
-  email: string;
-  picture: string;
-  sub: string;
-  iat: number;
-  exp: number;
-  jti: string;
-};
-
-export default function SideNavbar({ Admin, session }: Props) {
-  const [sessionUser, setSessionUser] = useState<sessionUser>(session.user);
+export default function SideNavbar() {
+  const { data: session } = useSession();
   const [expanded, setExpanded] = useState(true);
   const path = usePathname();
-
-  useEffect(() => {
-    if (session.user) {
-      setSessionUser(session.user);
-    }
-  }, [session]);
-
-  if (!sessionUser) return;
 
   return (
     <aside className="sticky max-h-screen top-0 flex flex-col border-r shadow-sm">
@@ -111,7 +90,8 @@ export default function SideNavbar({ Admin, session }: Props) {
       </div>
       <ul className="flex-1 flex-col gap-2 p-4">
         {NavMenu.map((menu, i) => {
-          if (menu.href == "/users" && !Admin) return null;
+          if (menu.href == "/users" && session?.user.role !== "admin")
+            return null;
           return (
             <SidebarItem
               key={i}
@@ -128,15 +108,15 @@ export default function SideNavbar({ Admin, session }: Props) {
         })}
       </ul>
       <div className="flex items-center gap-2 border-t p-3">
-        <Link href={`users/editUsers/${sessionUser.sub}`}>
+        <Link href={`users/editUsers/${session?.user.sub}`}>
           <div className="w-12 h-12 rounded-full">
             <Avatar>
               <AvatarImage
-                src={sessionUser.picture as string}
-                alt={sessionUser.name}
+                src={session?.user.picture as string}
+                alt={session?.user.name}
               />
               <AvatarFallback>
-                {sessionUser.name.slice(0, 2).toLocaleUpperCase()}
+                {session?.user.name.slice(0, 2).toLocaleUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -148,9 +128,9 @@ export default function SideNavbar({ Admin, session }: Props) {
         >
           <div className="leading-4">
             <h4 className="font-semibold">
-              {sessionUser.name.toLocaleUpperCase()}
+              {session?.user.name.toLocaleUpperCase()}
             </h4>
-            <span className="text-xs text-gray-400">{sessionUser.email}</span>
+            <span className="text-xs text-gray-400">{session?.user.email}</span>
           </div>
           <Button variant={"ghost"} className="px-1">
             <FiMoreVertical size={24} />
