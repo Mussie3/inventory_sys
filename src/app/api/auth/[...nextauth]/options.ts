@@ -28,7 +28,10 @@ export const options: NextAuthOptions = {
 
         if (!allUser) return null;
         const filterdUsers = allUser.filter(
-          (Users) => Users.role == "admin" || Users.role == "manager"
+          (Users) =>
+            Users.role == "admin" ||
+            Users.role == "manager" ||
+            Users.role == "sales"
         );
 
         const user = filterdUsers?.find(
