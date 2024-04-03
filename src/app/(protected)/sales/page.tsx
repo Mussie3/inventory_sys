@@ -17,6 +17,7 @@ import {
 import { FiMoreVertical } from "react-icons/fi";
 import Link from "next/link";
 import { toast } from "sonner";
+import TodaySalesCard from "@/components/ui/TodaySalesCard";
 
 type Items = {
   productId: string;
@@ -27,14 +28,20 @@ type Items = {
 
 type Sales = {
   customer: string;
-  productId: string;
-  datetime: string;
-  docId: string;
-  discounted: string;
-  totalAmount: number;
-  creditedAmount: number;
-  paidIn: string;
   items: Items[];
+  totalAmount: number;
+  paidInPrices: PaidInPrice;
+  docId: string;
+  paidIn: string;
+  cashId: string;
+  datetime: string;
+};
+
+type PaidInPrice = {
+  cash: number;
+  credit: number;
+  POS: number;
+  transfer: number;
 };
 
 type Customer = {
@@ -45,7 +52,6 @@ type Customer = {
   email: string;
   gender: string;
   phone_number: string;
-  discount: number;
   history: string[];
 };
 
@@ -68,9 +74,8 @@ type SalesViewData = {
   productId: string;
   datetime: string;
   docId: string;
-  discounted: string;
   totalAmount: number;
-  creditedAmount: number;
+  paidInPrices: PaidInPrice;
   paidIn: string;
   items: Items[];
 };
@@ -284,10 +289,6 @@ export default function Sales() {
       accessorKey: "totalAmount",
     },
     {
-      header: "Discount",
-      accessorKey: "discounted",
-    },
-    {
       header: ({ column }) => {
         return (
           <Button
@@ -389,13 +390,11 @@ export default function Sales() {
 
   return (
     <main className="flex flex-col h-full w-full justify-between p-12 gap-8">
-      <div className="flex gap-8">
-        <TotalCard timeLabel="This Week" />
-        <TotalCard timeLabel="This Month" />
-        <TotalCard timeLabel="This Year" />
-      </div>
-
       <div className="">
+        <div className="flex gap-8">
+          <TodaySalesCard type="Total" />
+          <TodaySalesCard type="Cash" />
+        </div>
         <ProductDataTable
           columns={columns}
           data={salesViewData ? salesViewData : []}

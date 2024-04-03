@@ -32,21 +32,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { FiFilter } from "react-icons/fi";
-import { BsFilterRight } from "react-icons/bs";
-import { DailyReportToExcel, SalseToExcel, SalseToExcel2 } from "@/lib/xlsx";
-import { useTodo } from "@/hooks/useContextData";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
+import { useTodo } from "@/hooks/useContextData";
+import { CashToExcel } from "@/lib/xlsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function ProductDataTable<TData, TValue>({
+export function CashDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const { cash, expanse, salesLoading } = useTodo();
+  const { cashLoading } = useTodo();
   const [sorting, setSorting] = useState<SortingState>([
     { id: "datetime", desc: true },
   ]);
@@ -56,8 +55,6 @@ export function ProductDataTable<TData, TValue>({
 
   const [minDate, setMinDate] = useState();
   const [maxDate, setMaxDate] = useState();
-
-  const [paidFilter, setPaidFilter] = useState<string[]>([]);
 
   const table = useReactTable({
     data,
@@ -88,6 +85,11 @@ export function ProductDataTable<TData, TValue>({
     setMaxDate(e.target.value);
   }
 
+  function clearFilterDate() {
+    setMaxDate(undefined);
+    setMinDate(undefined);
+  }
+
   useEffect(() => {
     setColumnFilters((pre) => {
       if (pre.find((f) => f.id == "datetime")) {
@@ -112,36 +114,7 @@ export function ProductDataTable<TData, TValue>({
     });
   }, [minDate, maxDate]);
 
-  useEffect(() => {
-    setColumnFilters((pre) => {
-      if (pre.find((f) => f.id == "paidIn")) {
-        return pre.map((f) => {
-          if (f.id == "paidIn") {
-            return {
-              id: "paidIn",
-              value: paidFilter,
-            };
-          }
-          return f;
-        });
-      }
-
-      return [
-        ...pre,
-        {
-          id: "paidIn",
-          value: paidFilter,
-        },
-      ];
-    });
-  }, [paidFilter]);
-
-  function clearFilterDate() {
-    setMaxDate(undefined);
-    setMinDate(undefined);
-  }
-
-  if (salesLoading == undefined)
+  if (cashLoading == undefined)
     return (
       <div className="w-full flex justify-center p-24">
         <span>Error occured while fetching Data</span>
@@ -151,75 +124,16 @@ export function ProductDataTable<TData, TValue>({
   return (
     <div className="">
       {/* input */}
-      <div className="flex justify-end gap-8">
-        <div className="">
-          <Button
-            variant="default"
-            className="bg-blue-400 hover:bg-blue-600"
-            onClick={() => DailyReportToExcel(data, cash, expanse)}
-          >
-            Daily report
-          </Button>
-        </div>
-      </div>
       <div className="flex items-center justify-between my-4">
         <div className="flex items-center gap-8">
           <Input
-            placeholder="Filter Customer name"
-            value={
-              (table.getColumn("customerD")?.getFilterValue() as string) || ""
-            }
+            placeholder="Filter by title"
+            value={(table.getColumn("title")?.getFilterValue() as string) || ""}
             onChange={(e) => {
-              table.getColumn("customerD")?.setFilterValue(e.target.value);
+              table.getColumn("title")?.setFilterValue(e.target.value);
             }}
             className="w-full md:min-w-[400px]"
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto min-w-fit">
-                <FiFilter size={16} />
-                <div className="pl-2">Paid-In</div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {["cash", "credit", "POS", "mixed", "transfer"].map((p, i) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={i}
-                    className="capitalize"
-                    checked={paidFilter.includes(p)}
-                    onCheckedChange={(value) => {
-                      const arr = paidFilter;
-                      if (value) {
-                        //checking weather array contain the id
-                        arr.push(p); //adding to array because value doesnt exists
-                      } else {
-                        arr.splice(arr.indexOf(p), 1); //deleting
-                      }
-
-                      setPaidFilter([...arr]);
-                    }}
-                  >
-                    <div
-                      className={`flex items-center justify-center font-bold rounded rouned w-full px-2 ${
-                        p == "cash"
-                          ? "bg-green-400  text-green-50"
-                          : p == "credit"
-                          ? "bg-red-400  text-red-50"
-                          : p == "POS"
-                          ? "bg-blue-400  text-blue-50"
-                          : p == "mixed"
-                          ? "bg-orange-400  text-orange-50"
-                          : "bg-violet-400  text-violet-50"
-                      }`}
-                    >
-                      <div className="">{p}</div>
-                    </div>
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <div className="flex min-w-fit gap-8">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -270,7 +184,7 @@ export function ProductDataTable<TData, TValue>({
           <div className="">
             <Button
               variant="secondary"
-              onClick={() => SalseToExcel2(table.getFilteredRowModel().rows)}
+              onClick={() => CashToExcel(table.getFilteredRowModel().rows)}
             >
               Export Sales To Excel
             </Button>
@@ -280,11 +194,15 @@ export function ProductDataTable<TData, TValue>({
               <Link href="/sales/addSales">Add Sales</Link>
             </Button>
           </div>
+          <div className="">
+            <Button asChild>
+              <Link href="/cash/addCash">Add Cash</Link>
+            </Button>
+          </div>
           {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                <BsFilterRight size={16} />
-                <div className="pl-2">View</div>
+                Columns
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -331,7 +249,7 @@ export function ProductDataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {salesLoading ? (
+            {cashLoading ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
@@ -347,7 +265,7 @@ export function ProductDataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"} //not nessesary
                 >
-                  {row.getVisibleCells().map((cell, i) => (
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -408,4 +326,4 @@ export function ProductDataTable<TData, TValue>({
   );
 }
 
-export default ProductDataTable;
+export default CashDataTable;

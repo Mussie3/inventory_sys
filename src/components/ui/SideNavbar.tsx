@@ -7,6 +7,7 @@ import { LiaProductHunt, LiaUserSolid } from "react-icons/lia";
 import { MdOutlineInventory2 } from "react-icons/md";
 import { BsChevronBarLeft, BsChevronBarRight } from "react-icons/bs";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { IoCashOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "./button";
@@ -45,6 +46,11 @@ const NavMenu = [
     href: "/expanse",
     text: "Expanse",
     icon: <RiMoneyDollarCircleLine className="w-6 h-6" />,
+  },
+  {
+    href: "/cash",
+    text: "Cash",
+    icon: <IoCashOutline className="w-6 h-6" />,
   },
   {
     href: "/users",

@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FiMoreVertical } from "react-icons/fi";
 import Link from "next/link";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 type Product = {
@@ -221,13 +220,17 @@ export default function Inventory() {
       },
       accessorKey: "datetime",
       cell: ({ row }) => {
-        const time = row.getValue("datetime");
+        const history: { addedAmount: number; datetime: string }[] =
+          row.original.history;
+        const time = history[history.length - 1].datetime;
         const formatted = new Date(time as string).toLocaleDateString();
         return <div className="">{formatted}</div>;
       },
       enableColumnFilter: true,
       filterFn: (row, columnId, filterStatuses) => {
-        const date: any = row.getValue(columnId);
+        const history: { addedAmount: number; datetime: string }[] =
+          row.original.history;
+        const date = history[history.length - 1].datetime;
         const [start, end] = filterStatuses.split(","); // value => two date input values
 
         //If one filter defined and date is null filter it

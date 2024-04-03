@@ -48,14 +48,6 @@ const FormSchema = z.object({
     }),
   // creditAmount: z.string(),
   // creditUsed: z.string(),
-  discount: z
-    .string()
-    .min(0, {
-      message: "Discount must be at least 0%.",
-    })
-    .max(20, {
-      message: "Discount must be at least 20%.",
-    }),
 });
 
 type Customer = {
@@ -66,7 +58,6 @@ type Customer = {
   email: string;
   gender: string;
   phone_number: string;
-  discount: number;
   history: string[];
 };
 
@@ -101,7 +92,6 @@ export default function AddCustomerForm({
       phone_number: defaultValue?.phone_number.toString(),
       // creditAmount: defaultValue?.credit.max.toString(),
       // creditUsed: defaultValue?.credit.used.toString(),
-      discount: defaultValue?.discount.toString(),
     },
   });
 
@@ -134,7 +124,6 @@ export default function AddCustomerForm({
               max: Number(newData.max),
               used: Number(newData.used),
             },
-            discount: Number(newData.discount),
           };
 
           return editedCustomer;
@@ -156,7 +145,6 @@ export default function AddCustomerForm({
         last_name: newData.last_name,
         gender: newData.gender,
         phone_number: newData.phone_number,
-        discount: Number(newData.discount),
         history: [],
       };
       newCustomer = [...customer, createdCustomer];
@@ -342,36 +330,6 @@ export default function AddCustomerForm({
           ) : null}
 
           <div className="flex flex-wrap gap-4">
-            <div className="w-full xl:w-96">
-              <FormField
-                control={form.control}
-                name="discount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Discount</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Discount" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="0">0%</SelectItem>
-                          <SelectItem value="5">5%</SelectItem>
-                          <SelectItem value="10">10%</SelectItem>
-                          <SelectItem value="15">15%</SelectItem>
-                          <SelectItem value="20">20%</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    {/* <FormDescription>Input your user password.</FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <div className="w-full xl:w-96">
               <FormField
                 control={form.control}

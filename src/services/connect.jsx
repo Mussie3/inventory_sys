@@ -150,6 +150,24 @@ const services = {
       return undefined;
     }
   },
+  AddCash: async (cash) => {
+    const cashref = collection(db, "Cash");
+
+    try {
+      const cashid = await addDoc(cashref, { ...cash });
+      const createdref = doc(db, "Cash", cashid.id);
+      await setDoc(
+        createdref,
+        {
+          docId: cashid.id,
+        },
+        { merge: true }
+      );
+      return cashid.id;
+    } catch (err) {
+      return undefined;
+    }
+  },
   AddCatagory: async (Catagory) => {
     const productsref = collection(db, "Catagorys");
 
@@ -278,6 +296,21 @@ const services = {
       return false;
     }
   },
+  EditCash: async (cash, cashId) => {
+    const createdref = doc(db, "Cash", cashId);
+    try {
+      await setDoc(
+        createdref,
+        {
+          ...cash,
+        },
+        { merge: true }
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
   EditCatagory: async (id, catagoryName) => {
     const salesref = doc(db, "Catagorys", id);
 
@@ -385,6 +418,16 @@ const services = {
       throw Error;
     }
   },
+  GetAllCash: async () => {
+    const Cashref = collection(db, "Cash");
+    try {
+      const data = await getDocs(Cashref, fetchCache);
+      const allcash = data.docs.map((doc) => doc.data());
+      return allcash;
+    } catch (err) {
+      throw Error;
+    }
+  },
   DeleteCustomer: async (Id) => {
     const customerref = doc(db, "Customers", Id);
     try {
@@ -434,6 +477,15 @@ const services = {
     const expanseref = doc(db, "Expanse", Id);
     try {
       await deleteDoc(expanseref);
+      return true;
+    } catch (err) {
+      return undefined;
+    }
+  },
+  DeleteCash: async (Id) => {
+    const cashref = doc(db, "Cash", Id);
+    try {
+      await deleteDoc(cashref);
       return true;
     } catch (err) {
       return undefined;

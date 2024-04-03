@@ -1,9 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import services from "@/services/connect";
 import Link from "next/link";
 import React from "react";
-import { ExpanseDataTable } from "./data-table";
+import CashDataTable from "./data-table";
 import { useTodo } from "@/hooks/useContextData";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,45 +20,47 @@ import { toast } from "sonner";
 import ExCard from "@/components/ui/exCard";
 import CashIncomeCard from "@/components/ui/CashIncomeCard";
 import NetCash from "@/components/ui/NetCash";
+import TodayCashCard from "@/components/ui/TodayCashCard";
 
-type Expanse = {
+type Cash = {
   docId: string;
   title: string;
   discription: string;
   amount: string;
+  type: string;
   datetime: string;
 };
 export default function Users() {
-  const { expanse, setExpanse } = useTodo();
+  const { cash, setCash } = useTodo();
 
-  function fetchExpansedata(id: string) {
-    const newExpanse = expanse.filter((ex: Expanse) => ex.docId != id);
-    setExpanse(newExpanse);
+  function fetchCashdata(id: string) {
+    const newCash = cash.filter((ex: Cash) => ex.docId != id);
+    setCash(newCash);
   }
 
-  if (!expanse) return null;
+  if (!cash) return null;
 
-  const expansedata = expanse?.map((ex: Expanse) => {
+  const cashdata = cash?.map((ex: Cash) => {
     return {
       ...ex,
     };
   });
 
-  async function deleteExpanse(id: string) {
-    const res = await fetch("/api/deleteExpanse", {
+  async function deleteCash(id: string) {
+    const res = await fetch("/api/deleteCash", {
       method: "POST",
       body: JSON.stringify({ id }),
     });
 
     if (res.ok) {
       const response = await res.json();
-      if (response.success) fetchExpansedata(id);
+      if (response.success) fetchCashdata(id);
       return response.success;
     }
     throw Error;
   }
 
-  const columns: ColumnDef<Expanse>[] = [
+  const columns: ColumnDef<Cash>[] = [
     {
       id: "select",
       header: ({ table }) => {
@@ -96,6 +97,10 @@ export default function Users() {
     {
       header: "Amount",
       accessorKey: "amount",
+    },
+    {
+      header: "Type",
+      accessorKey: "type",
     },
     {
       header: ({ column }) => {
@@ -170,26 +175,30 @@ export default function Users() {
                 Copy Amount
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="bg-blue-400 text-white mt-2">
-                <Link href={`expanse/editExpanse/${rowdata.docId}`}>
-                  Edit Details
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="bg-red-400 text-white mt-2"
-                // onClick={() => deleteUser(rowdata.docId)}
-                onClick={() =>
-                  toast.promise(deleteExpanse(rowdata.docId), {
-                    loading: "deleting...",
-                    success: (data) => {
-                      return `Expanse has been deleted`;
-                    },
-                    error: "Error",
-                  })
-                }
-              >
-                Delete Expanse
-              </DropdownMenuItem>
+              {rowdata.type == "other" && (
+                <DropdownMenuItem className="bg-blue-400 text-white mt-2">
+                  <Link href={`cash/editCash/${rowdata.docId}`}>
+                    Edit Details
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {rowdata.type == "other" && (
+                <DropdownMenuItem
+                  className="bg-red-400 text-white mt-2"
+                  // onClick={() => deleteUser(rowdata.docId)}
+                  onClick={() =>
+                    toast.promise(deleteCash(rowdata.docId), {
+                      loading: "deleting...",
+                      success: (data) => {
+                        return `Cash has been deleted`;
+                      },
+                      error: "Error",
+                    })
+                  }
+                >
+                  Delete Cash
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -200,11 +209,13 @@ export default function Users() {
   return (
     <div className="flex flex-col h-full w-full justify-between p-12">
       <div className="flex gap-8">
-        <ExCard />
+        <TodayCashCard type="Total" />
+        <TodayCashCard type="Expense" />
+        <TodayCashCard type="Available" />
       </div>
 
       <div className="w-full">
-        <ExpanseDataTable columns={columns} data={expansedata} />
+        <CashDataTable columns={columns} data={cashdata} />
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ export const POST = async (request) => {
       services.GetAllSeles(),
       services.GetAllUsers(),
       services.GetAllExapase(),
+      services.GetAllCash(),
     ];
 
     const AllResults = await Promise.allSettled(promises);

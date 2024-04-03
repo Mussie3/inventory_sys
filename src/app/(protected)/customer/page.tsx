@@ -32,7 +32,6 @@ type Customer = {
   email: string;
   gender: string;
   phone_number: string;
-  discount: number;
   history: string[];
 };
 
@@ -129,27 +128,7 @@ export default function Customer() {
         return <div className="font-medium">{formatedPhoneNumber}</div>;
       },
     },
-    {
-      header: ({ column }) => {
-        return (
-          <Button
-            variant={"ghost"}
-            onClick={() => {
-              column.toggleSorting(column.getIsSorted() === "asc");
-            }}
-            className="pl-0"
-          >
-            Discount %
-            <RiArrowUpDownFill size={16} />
-          </Button>
-        );
-      },
-      accessorKey: "discount",
-      cell: ({ row }) => {
-        const formatedDiscountPercentail = `${row.getValue("discount")}%`;
-        return <div className="font-medium">{formatedDiscountPercentail}</div>;
-      },
-    },
+
     {
       header: "Credit Allowed",
       accessorKey: "credit",
@@ -185,7 +164,7 @@ export default function Customer() {
           <div className="font-medium">
             {credit.allowed
               ? `${credit.used.toLocaleString("en-US")} ETB`
-              : null}
+              : `-`}
           </div>
         );
       },

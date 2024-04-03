@@ -1,7 +1,7 @@
 import services from "@/services/connect";
 
 export const POST = async (request) => {
-  const { paidIn, discounted, customer, totalAmount, items, creditAmount } =
+  const { paidIn, customer, totalAmount, items, customerName, paidInPrices } =
     await request.json();
 
   try {
@@ -28,13 +28,27 @@ export const POST = async (request) => {
       if (!good) err.push(items[i].productId);
     }
 
+    let cashDocId;
+
+    if (paidInPrices.cash > 0) {
+      const newCash = {
+        title: `Paid in Cash Sale`,
+        discription: `Sale paid by ${customerName}`,
+        amount: paidInPrices.cash,
+        type: `sale`,
+        datetime: new Date().toISOString(),
+      };
+
+      cashDocId = await services.AddCash(newCash);
+    }
+
     const newSales = {
       customer: customer,
-      discounted: discounted,
       totalAmount: totalAmount,
-      creditedAmount: creditAmount,
       paidIn: paidIn,
+      paidInPrices: paidInPrices,
       items: items,
+      cashId: cashDocId ? cashDocId : ``,
       datetime: new Date().toISOString(),
     };
 
@@ -46,8 +60,11 @@ export const POST = async (request) => {
       let cuData;
       const history = cu.history;
 
-      if (paidIn == "credit" || paidIn == "mixed") {
-        const used = cu.credit.used + creditAmount;
+      if (
+        paidIn == "credit" ||
+        (paidIn == "mixed" && paidInPrices.credit > 0)
+      ) {
+        const used = cu.credit.used + paidInPrices.credit;
         cuData = {
           history: [...history, created],
           credit: { ...cu.credit, used: used },
@@ -65,6 +82,7 @@ export const POST = async (request) => {
         result: {
           faildInv: err.length !== 0 ? false : err,
           created: created,
+          cashId: cashDocId ? cashDocId : ``,
           addedToCustomer: addedToCustomer ? true : false,
         },
       }),

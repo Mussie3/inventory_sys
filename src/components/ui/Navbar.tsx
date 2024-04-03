@@ -5,16 +5,20 @@ import Signout from "./Signout";
 import { ModeToggle } from "./toggle-mode";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import GetCurrentPath from "./getCurrentPath";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import BackButton from "./BackButton";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const path = usePathname();
+  const isDynamicRoute = path.split("/").length >= 3;
 
   return (
     <div className="flex items-center justify-between px-8 min-h-[8vh] border-b shadow-sm bg-white dark:bg-black z-100">
-      <div className="">
-        <GetCurrentPath />
+      <div className="flex items-center gap-4">
+        <BackButton />
+        {!isDynamicRoute && <GetCurrentPath />}
       </div>
       <div className="flex gap-6 items-center">
         <div className="">

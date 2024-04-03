@@ -91,8 +91,8 @@ export default function EditSaleProductModel({
           <DialogTitle>Product : {product.product.product_name}</DialogTitle>
           <DialogDescription>
             <div className="flex flex-col gap-3 items-end">
-              <div className="flex gap-4 mt-2 w-full border rounded p-2">
-                <div className="w-[140px] h-[160px] border rounded overflow-hidden">
+              <div className="flex gap-4 mt-2 w-full border rounded py-4 px-6">
+                {/* <div className="w-[140px] h-[160px] border rounded overflow-hidden">
                   <Image
                     src={product.product.image}
                     alt={product.product.product_name}
@@ -100,7 +100,7 @@ export default function EditSaleProductModel({
                     height={200}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </div> */}
 
                 <div className="flex flex-col gap-2 w-full">
                   <div className="flex flex-col gap-1">

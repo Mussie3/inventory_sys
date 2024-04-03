@@ -21,6 +21,13 @@ import { Card, CardContent } from "./card";
 import { useTodo } from "@/hooks/useContextData";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
 
 type Customer = {
   docId: string;
@@ -30,7 +37,6 @@ type Customer = {
   email: string;
   gender: string;
   phone_number: string;
-  discount: number;
   history: string[];
 };
 
@@ -42,7 +48,10 @@ const FormSchema = z.object({
   paidAmount: z.string(),
 });
 export default function AddCreditForm({ customerData }: Props) {
-  const { customer, setCustomer, setCustomerLoading } = useTodo();
+  const { customer, setCustomer, cash, setCash, setCustomerLoading } =
+    useTodo();
+  const [paidIn, setPaidIn] = useState("cash");
+  const [paidInCash, setPaidInCash] = useState(0);
   const [sending, setSending] = useState(false);
   const router = useRouter();
 
@@ -78,6 +87,21 @@ export default function AddCreditForm({ customerData }: Props) {
     setCustomer(newCustomer);
   }
 
+  function fetchCashdata(postdata: any, cashId: string) {
+    const newCash = [
+      ...cash,
+      {
+        docId: cashId,
+        title: `Paid debt`,
+        discription: `debt paid by ${postdata.customer}`,
+        amount: postdata.paidIncash,
+        type: `debt`,
+        datetime: new Date().toISOString(),
+      },
+    ];
+    setCash(newCash);
+  }
+
   async function AddCreditToCustomer(data: z.infer<typeof FormSchema>) {
     const postdata = {
       newCredit: {
@@ -86,6 +110,10 @@ export default function AddCreditForm({ customerData }: Props) {
         used: customerData.credit.used - Number(data.paidAmount),
       },
       customerId: customerData.docId,
+      customer: customerData.first_name,
+      paidIncash:
+        paidIn == "cash" ? data.paidAmount : paidIn == "mixed" ? paidInCash : 0,
+      paidIn: paidIn,
     };
     const res = await fetch("/api/addCredit", {
       method: "POST",
@@ -95,6 +123,9 @@ export default function AddCreditForm({ customerData }: Props) {
     if (res.ok) {
       const response = await res.json();
       fetchCustomerdata(postdata);
+      if (response.cashId) {
+        fetchCashdata(postdata, response.cashId);
+      }
       router.push(`/customer/`);
       return response.result;
     }
@@ -156,12 +187,50 @@ export default function AddCreditForm({ customerData }: Props) {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-6"
         >
+          {customerData?.credit.allowed ? (
+            <div className="flex items-center gap-4">
+              <span>PaidIn:</span>
+              <Select
+                onValueChange={(value) => setPaidIn(value)}
+                defaultValue={paidIn}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="PaidIn" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cash">Cash</SelectItem>
+                  <SelectItem value="credit">Credit</SelectItem>
+                  <SelectItem value="mixed">Mixed</SelectItem>
+                  <SelectItem value="POS">POS</SelectItem>
+                  <SelectItem value="transfer">Transfer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <span>Paid-In:</span>
+              <Select
+                onValueChange={(value) => setPaidIn(value)}
+                defaultValue={"cash"}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="PaidIn" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cash">Cash</SelectItem>
+                  <SelectItem value="POS">POS</SelectItem>
+                  <SelectItem value="transfer">Transfer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           <FormField
             control={form.control}
             name="paidAmount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Amount of the Customer paid back</FormLabel>
+                <FormLabel>Total Amount of the Customer paid back</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -181,6 +250,24 @@ export default function AddCreditForm({ customerData }: Props) {
               </FormItem>
             )}
           />
+          {paidIn == "mixed" && (
+            <div className="flex flex-col gap-2">
+              <div className="">Paid In Cash</div>
+              <Input
+                type="number"
+                onChange={(e) => {
+                  if (
+                    Number(e.target.value) < Number(form.watch("paidAmount"))
+                  ) {
+                    setPaidInCash(Number(e.target.value));
+                  }
+                }}
+                value={paidInCash}
+                placeholder={`0 ETB`}
+                max={form.watch("paidAmount")}
+              />
+            </div>
+          )}
 
           <div className="flex justify-end">
             <Button disabled={sending} type="submit">

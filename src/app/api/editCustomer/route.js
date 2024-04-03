@@ -7,7 +7,6 @@ export const POST = async (request) => {
     last_name,
     gender,
     phone_number,
-    discount,
     docId,
     max,
     used,
@@ -26,7 +25,6 @@ export const POST = async (request) => {
       last_name,
       gender,
       phone_number,
-      discount: Number(discount),
     };
 
     const newCustomerId = await services.EditCustomer(newCustomer, docId);

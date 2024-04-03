@@ -6,14 +6,26 @@ type Sales = {
   customer: string;
   items: Items[];
   totalAmount: number;
-  creditedAmount: number;
+  paidInPrices: PaidInPrice;
   docId: string;
   paidIn: string;
+  cashId: string;
   datetime: string;
-  discounted: boolean;
 };
 
-type Items = { no: number; productId: string };
+type PaidInPrice = {
+  cash: number;
+  credit: number;
+  POS: number;
+  transfer: number;
+};
+
+type Items = {
+  productId: string;
+  productDocId: string;
+  no: number;
+  discount_per_unit: number;
+};
 
 type Props = {
   params: {

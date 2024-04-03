@@ -22,6 +22,8 @@ export function DataProvider({ children }) {
   const [usersLoading, setUsersLoading] = useState(true);
   const [expanse, setExpanse] = useState([]);
   const [expanseLoading, setExpanseLoading] = useState(true);
+  const [cash, setCash] = useState([]);
+  const [cashLoading, setCashLoading] = useState(true);
 
   function fetchAllPagedata() {
     setProductsLoading(true);
@@ -31,6 +33,7 @@ export function DataProvider({ children }) {
     setSalesLoading(true);
     setUsersLoading(true);
     setExpanseLoading(true);
+    setCashLoading(true);
     fetch("/api/getAllPagesData", {
       method: "POST",
       cache: "no-store",
@@ -80,6 +83,12 @@ export function DataProvider({ children }) {
         } else {
           setExpanseLoading(undefined);
         }
+        if (data[6].status == "fulfilled") {
+          setCash(data[7].value);
+          setCashLoading(false);
+        } else {
+          setCashLoading(undefined);
+        }
       })
       .catch((err) => {
         setProductsLoading(undefined);
@@ -89,6 +98,7 @@ export function DataProvider({ children }) {
         setSalesLoading(undefined);
         setUsersLoading(undefined);
         setExpanseLoading(undefined);
+        setCashLoading(undefined);
       });
   }
 
@@ -127,6 +137,10 @@ export function DataProvider({ children }) {
         setExpanse,
         expanseLoading,
         setExpanseLoading,
+        cash,
+        setCash,
+        cashLoading,
+        setCashLoading,
         fetchAllPagedata,
       }}
     >

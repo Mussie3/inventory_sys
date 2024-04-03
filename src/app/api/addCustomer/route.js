@@ -7,7 +7,6 @@ export const POST = async (request) => {
     last_name,
     gender,
     phone_number,
-    discount,
     max,
     used,
     allowed,
@@ -25,7 +24,6 @@ export const POST = async (request) => {
       last_name,
       gender,
       phone_number,
-      discount: Number(discount),
       history: [],
     };
 

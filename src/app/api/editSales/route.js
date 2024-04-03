@@ -3,12 +3,12 @@ import services from "@/services/connect";
 export const POST = async (request) => {
   const {
     paidIn,
-    discounted,
     customer,
     totalAmount,
     items,
     salesId,
-    creditAmount,
+    customerName,
+    paidInPrices,
   } = await request.json();
 
   try {
@@ -62,18 +62,21 @@ export const POST = async (request) => {
       if (customer !== "XXXX") {
         const newcustomer = await services.GetCustomerById(customer);
         let cuData;
-        if (paidIn == "credit" || paidIn == "mixed") {
-          const used = newcustomer.credit.used + creditAmount;
+        if (
+          paidIn == "credit" ||
+          (paidIn == "mixed" && paidInPrices.credit > 0)
+        ) {
+          const used = newcustomer.credit.used + paidInPrices.credit;
           cuData = {
-            history: [...newcustomer.history, created],
+            history: [...newcustomer.history, salesId],
             credit: { ...newcustomer.credit, used: used },
           };
         } else {
           cuData = {
-            history: [...history, created],
+            history: [...newcustomer.history, salesId],
           };
         }
-        addedToCustomer = services.AddSalesToCustomer(customer, salesId);
+        addedToCustomer = services.AddSalesToCustomer(customer, cuData);
       }
       if (oldSales.customer !== "XXXX") {
         const oldcustomer = await services.GetCustomerById(oldSales.customer);
@@ -82,8 +85,11 @@ export const POST = async (request) => {
         );
 
         let cuData;
-        if (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") {
-          const used = oldcustomer.credit.used - oldSales.creditedAmount;
+        if (
+          oldSales.paidIn == "credit" ||
+          (oldSales.paidIn == "mixed" && oldSales.paidInPrices.credit > 0)
+        ) {
+          const used = oldcustomer.credit.used - oldSales.paidInPrices.credit;
           cuData = {
             history: oldcustomerHistory,
             credit: { ...oldcustomer.credit, used: used },
@@ -100,33 +106,29 @@ export const POST = async (request) => {
         );
       }
     } else {
-      if (oldSales.creditedAmount != creditAmount) {
+      if (oldSales.paidInPrices.credit != paidInPrices.credit) {
         const thecustomer = await services.GetCustomerById(customer);
         let cuData;
-        if (
-          (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") &&
-          (paidIn == "credit" || paidIn == "mixed")
-        ) {
+        if (oldSales.paidInPrices.credit > 0 && paidInPrices.credit > 0) {
           const used =
-            thecustomer.credit.used + (creditAmount - oldSales.creditedAmount);
+            thecustomer.credit.used +
+            (paidInPrices.credit - oldSales.paidInPrices.credit);
           cuData = {
             credit: { ...thecustomer.credit, used: used },
           };
         } else if (
-          (oldSales.paidIn == "credit" || oldSales.paidIn == "mixed") &&
-          paidIn != "credit" &&
-          paidIn != "mixed"
+          oldSales.paidInPrices.credit > 0 &&
+          paidInPrices.credit == 0
         ) {
-          const used = thecustomer.credit.used - oldSales.creditedAmount;
+          const used = thecustomer.credit.used - oldSales.paidInPrices.credit;
           cuData = {
             credit: { ...thecustomer.credit, used: used },
           };
         } else if (
-          oldSales.paidIn != "credit" &&
-          oldSales.paidIn != "mixed" &&
-          (paidIn == "credit" || paidIn == "mixed")
+          oldSales.paidInPrices.credit == 0 &&
+          paidInPrices.credit > 0
         ) {
-          const used = thecustomer.credit.used + creditAmount;
+          const used = thecustomer.credit.used + paidInPrices.credit;
           cuData = {
             credit: { ...thecustomer.credit, used: used },
           };
@@ -150,13 +152,36 @@ export const POST = async (request) => {
       if (!good) err.push(arr[i].productDocId);
     }
 
+    let cashDocId;
+    if (paidInPrices.cash != sale.paidInPrices.cash) {
+      if (oldSales.cashId) {
+        //edit cash
+        const newCash = {
+          discription: `Sale paid by ${customerName}`,
+          amount: paidInPrices.cash,
+        };
+        const Cashupdated = await services.EditCash(newCash, oldSales.cashId);
+        cashDocId = oldSales.cashId;
+      } else {
+        const newCash = {
+          title: `Paid in Cash Sale`,
+          discription: `Sale paid by ${customerName}`,
+          amount: paidInPrices.cash,
+          type: `sale`,
+          datetime: new Date().toISOString(),
+        };
+
+        cashDocId = await services.AddCash(newCash);
+      }
+    }
+
     const newSales = {
       customer: customer,
-      discounted: discounted,
       totalAmount: totalAmount,
       paidIn: paidIn,
+      cashId: cashDocId ? cashDocId : ``,
       items: items,
-      creditedAmount: creditAmount,
+      paidInPrices: paidInPrices,
     };
 
     const edited = services.EditSales(salesId, newSales);

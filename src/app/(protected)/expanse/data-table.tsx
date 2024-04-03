@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -27,11 +27,14 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { FiFilter } from "react-icons/fi";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { useTodo } from "@/hooks/useContextData";
+import { ExapanseToExcel } from "@/lib/xlsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,13 +45,16 @@ export function ExpanseDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const { usersLoading } = useTodo();
+  const { expanseLoading } = useTodo();
   const [sorting, setSorting] = useState<SortingState>([
     { id: "datetime", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const [minDate, setMinDate] = useState();
+  const [maxDate, setMaxDate] = useState();
 
   const table = useReactTable({
     data,
@@ -71,18 +77,56 @@ export function ExpanseDataTable<TData, TValue>({
     },
   });
 
-  if (usersLoading == undefined)
+  function minDateFun(e: any) {
+    setMinDate(e.target.value);
+  }
+
+  function maxDateFun(e: any) {
+    setMaxDate(e.target.value);
+  }
+
+  function clearFilterDate() {
+    setMaxDate(undefined);
+    setMinDate(undefined);
+  }
+
+  useEffect(() => {
+    setColumnFilters((pre) => {
+      if (pre.find((f) => f.id == "datetime")) {
+        return pre.map((f) => {
+          if (f.id == "datetime") {
+            return {
+              id: "datetime",
+              value: `${minDate ? minDate : ""},${maxDate ? maxDate : ""}`,
+            };
+          }
+          return f;
+        });
+      }
+
+      return [
+        ...pre,
+        {
+          id: "datetime",
+          value: `${minDate ? minDate : ""},${maxDate ? maxDate : ""}`,
+        },
+      ];
+    });
+  }, [minDate, maxDate]);
+
+  if (expanseLoading == undefined) {
     return (
       <div className="w-full flex justify-center p-24">
         <span>Error occured while fetching Data</span>
       </div>
     );
+  }
 
   return (
     <div className="">
       {/* input */}
       <div className="flex items-center justify-between my-4">
-        <div className="">
+        <div className="flex items-center gap-8">
           <Input
             placeholder="Filter by title"
             value={(table.getColumn("title")?.getFilterValue() as string) || ""}
@@ -91,14 +135,67 @@ export function ExpanseDataTable<TData, TValue>({
             }}
             className="w-full md:min-w-[400px]"
           />
+          <div className="flex min-w-fit gap-8">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  <FiFilter size={16} />
+                  <div className="pl-2">Date Filter</div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel className="text-lg">Date</DropdownMenuLabel>
+                <div className="flex flex-col items-end gap-4 p-4">
+                  <div className="flex items-center gap-2">
+                    <span> From:</span>
+                    <Input
+                      type={"date"}
+                      value={minDate}
+                      onChange={(e) => minDateFun(e)}
+                      className="w-full md:min-w-[200px]"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>To:</span>
+                    <Input
+                      type={"date"}
+                      value={maxDate}
+                      onChange={(e) => maxDateFun(e)}
+                      className="w-full md:min-w-[200px]"
+                    />
+                  </div>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {(minDate || maxDate) && (
+              <div className="flex gap-4 items-center">
+                <span>
+                  {minDate ? `${minDate} to ` : "Before to "}
+                  {maxDate ? maxDate : "Current"}
+                </span>
+                <Button variant="secondary" onClick={clearFilterDate}>
+                  Clear Date Filter
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-8">
+          <div className="">
+            <Button
+              variant="secondary"
+              onClick={() => ExapanseToExcel(table.getFilteredRowModel().rows)}
+            >
+              Export Sales To Excel
+            </Button>
+          </div>
+
           <div className="">
             <Button asChild>
               <Link href="/expanse/addExpanse">Add Expanse</Link>
             </Button>
           </div>
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
                 Columns
@@ -123,7 +220,7 @@ export function ExpanseDataTable<TData, TValue>({
                   );
                 })}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
       {/* table */}
@@ -148,7 +245,7 @@ export function ExpanseDataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {usersLoading ? (
+            {expanseLoading ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}

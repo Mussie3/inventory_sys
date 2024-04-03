@@ -35,7 +35,7 @@ import { FiFilter } from "react-icons/fi";
 import { BsFilterRight } from "react-icons/bs";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { useTodo } from "@/hooks/useContextData";
-import { InventoryToExcel } from "@/lib/xlsx";
+import { DailyInventoryToExcel, InventoryToExcel } from "@/lib/xlsx";
 import ReFetchAllDataButton from "@/components/ui/reFetchAllDataButton";
 
 interface DataTableProps<TData, TValue> {
@@ -55,7 +55,7 @@ export function InventoryDataTable<TData, TValue>({
   data,
   catagory,
 }: DataTableProps<TData, TValue>) {
-  const { inventoryLoading, catagoryLoading } = useTodo();
+  const { sales, inventoryLoading, catagoryLoading } = useTodo();
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: "datetime", desc: true },
@@ -160,6 +160,17 @@ export function InventoryDataTable<TData, TValue>({
   return (
     <div className="">
       {/* input */}
+      <div className="flex justify-end gap-8">
+        <div className="">
+          <Button
+            variant="default"
+            className="bg-blue-400 hover:bg-blue-600"
+            onClick={() => DailyInventoryToExcel(data, sales)}
+          >
+            Daily Inventorty report
+          </Button>
+        </div>
+      </div>
       <div className="flex items-center justify-between my-4">
         <div className="flex items-center gap-8">
           <Input
@@ -277,7 +288,7 @@ export function InventoryDataTable<TData, TValue>({
               <Link href="/inventory/addInventory">Add Inventory</Link>
             </Button>
           </div>
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
                 <BsFilterRight size={16} />
@@ -303,7 +314,7 @@ export function InventoryDataTable<TData, TValue>({
                   );
                 })}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
       {/* table */}
